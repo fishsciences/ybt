@@ -1,8 +1,8 @@
 ---
-title: "data-workflow"
+title: "Analysis"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{data-workflow}
+  %\VignetteIndexEntry{Analysis}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -17,9 +17,3 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(ybt)
 ```
-
-# The Data Workflow
-
-1. Deployments
-
-Deployments are updated via the deployments.xlsx spreadsheet, currently hosted on Google Drive.

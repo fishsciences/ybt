@@ -1,0 +1,84 @@
+---
+title: "Database"
+output: rmarkdown::pdf_document
+vignette: >
+  %\VignetteIndexEntry{Database}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(ybt)
+```
+
+## General database workflow
+
+This workflow applies when you want to re-create or edit/append the database with new data.
+
+1. Open `YB_Database.Rproj`
+2. Make sure the relative paths to the fresh download of the Google Drive folder are correct.
+3. Parameterize and run either:
+    - `db_create.R` if you're re-creating the database from scratch
+    - `db_append.R` if you're appending new data to the database
+4. Upload the updated `yb_database.sqlite` database file to `YB Telemetry Study` on Google Drive.
+
+#### Things to remember about the database:
+
+ - Currently, the database is not under official version control and it does not guard against duplicate entries, something that will be changed eventually.
+ - Don't forget to close the database connection after you've queried what you need. This is done with `dbDisconnect(connection)`.
+ - SQLite doesn't have an internal format for dates and times, so all dates and times are stored as characters in the database and need to be converted to date/time formats in `R`.
+
+## Creating the database from scratch
+
+This can be done with the `db_create.R` script in the `YB_Database.Rproj` directory.  It's not a very user-friendly process (kind of on purpose), so please let me know if you need to do it and I can walk you through the script the first time.
+
+## Overwriting the tag and deployment tables with new data
+
+This is done in the `db_append.R` script.  Since tag and deployment data comes from single, frequently-updated files on Google Drive, we overwrite their database `tags` and `deployments` tables every time we need to add new data.
+
+## Appending detections to the database
+
+The detections are (of course) the hardest part of this workflow, and so they get their own vignette, which you can bring up with `vignette(topic = "Database-detections", package = "ybt")`.
+
+## Querying the database
+
+The nice thing about doing all this in `R` is that we don't have to learn raw `SQL` - we can use `dplyr` to construct and run database queries (please see [this tutorial](https://db.rstudio.com/dplyr/) for more information).  Some examples of common database queries are below, but all the queries you need for the Analysis workflow are pre-written into the scripts and reproducible report.
+
+```{r, eval=FALSE, echo=TRUE}
+# database connection: requires >= RSQLite 2.1.1
+library(dplyr)
+db = RSQLite::dbConnect(RSQLite::SQLite(), "../yb_database.sqlite") # check relative path
+
+# get general info about database
+dbListTables(db)
+tbls = dbListTables(db)
+# how many rows per table?
+sapply(tbls, function(x) dbGetQuery(db, paste("SELECT COUNT(*) FROM" , x)))
+# how many/what fields per table?
+sapply(tbls, dbListFields, conn = db)
+
+# All tagging metadata (including both wst and chinook)
+alltags = tbl(db, "tags") %>% 
+  collect() %>% # this pulls the whole table
+  mutate(DateTagged = as.Date(DateTagged)) # this gets the dates and times in the correct format
+
+# just white sturgeon:
+wst = tbl(db, "tags") %>% 
+  filter(Sp == "wst") %>% 
+  collect() 
+
+# detections for just the white sturgeon tagged in 2012:
+wst2012 <- tbl(db, "tags") %>% # first get their TagID info
+  inner_join(tbl(db, "detections"), by = "TagID") %>% # join it with the detections table
+  filter(TagGroup == "wst_2012") %>% # filter down to just the 2012 white sturgeon
+  collect() # bring it into R as a data frame
+```
+
+

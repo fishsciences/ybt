@@ -23,6 +23,6 @@ A vector of tagids formatted for a query of the BARD database
 format data for BARD query
 }
 \examples{
-
+bard_tags(tagids = c(2841, 2842))
 
 }

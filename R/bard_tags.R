@@ -5,8 +5,9 @@
 #' @param tagVar The name of the TagID column in df
 #' @param codeVar The name of the CodeSpace column in df
 #' @return A vector of tagids formatted for a query of the BARD database
+#' @export
 #' @examples
-#'
+#'bard_tags(tagids = c(2841, 2842))
 #'
 bard_tags <- function(tagids, df = alltags, tagVar = "TagID", codeVar = "CodeSpace"){
 

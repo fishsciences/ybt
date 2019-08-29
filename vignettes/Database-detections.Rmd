@@ -1,0 +1,173 @@
+---
+title: "Database-detections"
+output: rmarkdown::pdf_document
+vignette: >
+  %\VignetteIndexEntry{Database-detections}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This is a subtopic of the `Database` workflow.  It covers all handling of the detection data, from the files downloaded in the field to appending the database.
+
+## General detections workflow
+  1. Download receivers in the field (following the SOP)
+  2. Process data in VUE, including drift-correction and exporting to .csv
+  2. Format in R, export formatted detections to correct `Detections/` subfolder
+  3. Append this new detection data to SQLite database
+  4. Back up updated database to cloud storage (currently: Google Drive)
+
+## 1. Download Receivers in the field
+
+ - Create a VUE database (.vdb) for field downloads
+ 
+     - Filename convention: "YB_fieldyyyy_mmdd.vdb"
+        - for example: "YB_field2020_0321.vdb" for a download occurring on March 21st 2020.
+     
+    - Put the .vdb, along with each individual .vrl and its RLD file, into its own subdirectory of the "FieldDownloads" folder.  Example:
+
+```{r, echo=TRUE, eval=FALSE}
+YB_Vemco
+ |-- YBFieldDownloads
+ |    |-- Field2020_0901
+ |        `--Field2020_0901.vdb
+ |        `--VR2W_104440_20200901_1.vrl
+ |        `--VR2W-RLD_104440_20200901_1.vrl
+ |        `--VR2W_123456_20200901_1.vrl
+ |        `--VR2W-RLD_123456_20200901_1.vrl
+```
+    
+ - Do this for each field download day until final downloads for the season are complete (this will typically be by June 30th of each year, depending on conditions).
+ 
+ - If it does not already exist, create a parent directory for the current detection year in `YB_Vemco/`.
+ 
+ - Once all downloads are complete, create a subfolder within the detection year's parent folder with a "_dc" suffix, if it has not already been done.  Example:
+ 
+```{r, echo=TRUE, eval=FALSE}
+YB_Vemco
+ |-- YBDetectionYears
+ |    |-YB_detyear2020_dc
+```
+
+
+## 2. Process data in VUE
+
+#### Set up the correct directory structure
+
+ - Create _dc.vdb (with correct naming convention; see below) and place within the corresponding detection year's _dc subfolder (which was created in the previous step).  Example:
+
+```{r, echo=TRUE, eval=FALSE}
+YB_Vemco
+ |-- YBDetectionYears
+ |    |-YB_detyear2020_dc
+ |         `--YB_detyear2020_dc.vdb
+```
+
+
+ - Edit VUE options to "copy .vrl files" into the correct _dc subfolder so that all edited .vrl files will end up in the _dc subfolder during import.
+    - Reminder: which detection year the .vrl is associated with is determined by the receiver's deployment START date, and NOT the download date.  We did this for better vrl tracking, but it means that if a receiver was downloaded and re-deployed on 2019-06-29 before being downloaded again on 2019-12-01, the edited .vrl file from 2019-12-01 would go in the detection year subfolder for 2018, NOT 2019.  This also means that you may need to re-export and append detections to the database more than one time for some detection years, depending on when you are completing an analysis.  If this becomes cumbersome or error-prone, we will re-evaluate.
+
+### Drift-correct and export all detections for detection year
+   
+ - Import raw field .vrls with the VRL editor tool and drift-correct upon import; accept the default appendix to filenames ("_edited.vrl").
+ 
+ - If any errors are reported in the import log, save the import log as a .txt file with and _error tag, i.e.: "YB_detyear2020_dc_Log_todaysdate_error.txt", within the _dc subfolder.  If we run into weird issues during the analysis, this is a good starting point to help us trace problematic or missing detection files.  NO need to save the log if everything imports successfully.
+ 
+ - Run false detection analysis tool; export .csv to _dc subfolder 
+      - naming convention: "YB_detyearX_dcFDA.csv"
+ - Export drift-corrected detections as one .csv into the same _dc subfolder.
+      - naming convention: "YB_detyearX_dc.csv"
+  
+ 
+An example of the directory structure for the field and drift-corrected data is then:
+
+```{r, echo=TRUE, eval=FALSE}
+YB_Vemco
+ |-- YBFieldDownloads
+ |    |-- Field2020_0901
+ |        `--Field2020_0901.vdb
+ |        `--VR2W_104440_20200901_1.vrl
+ |        `--VR2W-RLD_104440_20200901_1.vrl
+ |        `--VR2W_123456_20200901_1.vrl
+ |        `--VR2W-RLD_123456_20200901_1.vrl
+ |      `--(etc)
+ |    |--Field2021_0321
+ |      `--Field2021_0321.vdb
+ |      `--VR2W_104440_20210321_1.vrl
+ |      `--(etc) 
+ |-- YBDetectionYears
+ |    |-YB_detyear2020_dc
+ |      `--YB_detyear2020_dc.vdb
+ |      `--VR2W_104440_20200901_1_edited.vrl # assuming deployment began > 2020-07-01
+ |      `--VR2W_123456_20200901_1_edited.vrl # assuming deployment began > 2020-07-01
+ |      `--VR2W_104440_20210321_1_edited.vrl # assuming deployment began > 2020-07-01
+ |      `--(...rest of edited vrls from within detection year)
+ |      `--YB_detyear2020_dcFDA.csv # this is the false detection report exported from VUE
+ |      `--YB_detyear2020_dc.csv # these are the raw detections we will briefly QA/QC in R
+ |-- YB_detyear2021
+ |    |-- YB2021_field2021_1205
+ |      `--(etc)
+ |
+```      
+
+## 3. Format/QA/QC drift-corrected detection data in R:
+
+This is done through a standardized R script written for the project; (`YB_Database/R/formatting_raw_detections_template.R`)
+
+In some past years, vrls weren't available for the core locations, but the .vdb was.  In these cases the detections and events  were exported as csvs, [drift-corrected](https://gist.github.com/Myfanwy/a14c5bc2bcdde2a52d65fc78ea95004d) by hand, and exported as a separate .csv and loaded in with the general .csv in R.  These are noted in the vrlNotes field of the deployments table, and the cleaning scripts are in `YB_SQL_BaseTables/Detections/YB_detyearX_dc_dets/" subdirectories for reproducibility if the database ever needs to be re-built. 
+
+#### The formatting script does the following:
+ - Formats column headings
+ - Formats dates/times (POSIXct, PST, yyyy-mm-dd hh:mm:ss)
+ - Checks for simultaneous detections within receivers and tags; discard duplicates (there really shouldn't be any if VUE is functioning properly)
+ - With parameterization, saves the formatted data as a .csv of detections in the `YB_SQL_BaseTables/Detections/YB_detyearX_dc_dets/` directory of the SQL folder; this is what will be appended to the database.
+
+After saving the formatted detections, you should save a copy of the R Script to the same subdirectory if any substative changes (i.e., more than editing filepaths) were made.
+
+An example of the directory structure for the SQL data exported from R is then:
+
+```{r, echo=TRUE, eval=FALSE}
+YB_SQL_BaseTables
+ |`--Deployments.xlsx
+ |`--Tags.xlsx
+ |-- Detections
+ |    |-- YB_detyear2018_dc_dets
+ |          `--YB_detyear2018_dc_dets.csv
+ |          `--YB_detyear2018_dc_dets_step3script.R
+ |    |-- YB_detyear2019_dc_dets
+ |          `--(etc)
+
+```      
+
+
+Note - this QA/QC checks for duplicate detections within Tags and Receivers, but it cannot protect against duplicate detections spread across detection years.  Because sometimes receivers are not erased after downloading, duplicate detections can persist across different drift-corrected VUE databases (this happened with 104440 in 2013-2014).  It isn't practical to come up with a workflow to prevent this (field conditions can be unpredictable, technology will hiccup, etc).  Instead, these duplicate detections are uploaded to the database, but we trust that they will be removed during pre-analysis QA/QC.
+
+
+## 3. Append to SQLite database
+
+The most recent formatted/QA/QC'd detection data in the `YB_SQL/Detections/` directory will then be appended to the existing cleaned/QA/QC'd detection table in the MySQL database.  The database can then be queried for completing particular analyses.
+
+The Base detections table (and tags, and deployments) are inserted with the YB_SQL/ybdb_create.R script.  Records are appended to this database in the append_tables.R script.
+
+
+### Notes on further QA/QC of detection data
+
+Previously, additional QA/QC was done on the full detection dataset before saving as "read-only" in the YBP R package.  This new workflow for detection data is more efficient and leaves less room for error, but it does mean that the following QA/QC must often be completed AFTER every SQL query but BEFORE an analysis:
+
+  - If receivers have been grouped, you must again check for simultaneous detections: 
+      - likely locations: BC_joint, BC2_joint, RSTR, crossings, BC_Joint/BC2_Joint
+  - orphan detection screen (no tags detected before release, and that each detection belongs to a deployment)
+  - Discard false detections (from FDA detection table)
+  - Check for "shed" tags
+    - upon identifying shed tags, add them to a separate detection table and add a shed indicator to their tagging metadata
+  - Join with river kilometer and lat/long data and other receiver metadata, if any
+
+
+This QA/QC will be facilitated via the updated functions in the `ybt` package.
+

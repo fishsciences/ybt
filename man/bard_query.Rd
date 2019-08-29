@@ -17,11 +17,15 @@ bard_query(tagIDs, dateStart = "2012-01-01", dateEnd = Sys.Date(),
 
 \item{baseurl}{BARD query homepage}
 
-\item{curlH}{curl handle; defaults to curl, which if you've run setup.R is in the global environment; running the following code will recreate it: `curl = getCurlHandle(useragent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36", followlocation = TRUE)`}
+\item{curlH}{curl handle; defaults to curl, which if you've run setup.R is in the global environment; running the following code will recreate it: \code{curl = getCurlHandle(useragent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36", followlocation = TRUE)}}
 }
 \value{
 a data frame of BARD detections; note that these detections are in a summarized format that is NOT the same as our detections.
 }
 \description{
 Execute a BARD query
+}
+\examples{
+bard_query(tagIDS = bard_tags(c(2841, 2842)), curlH = getCurlHandle(useragent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36", followlocation = TRUE) )
+
 }
