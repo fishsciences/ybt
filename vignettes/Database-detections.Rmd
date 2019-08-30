@@ -1,6 +1,6 @@
 ---
 title: "Database-detections"
-output: rmarkdown::pdf_document
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Database-detections}
   %\VignetteEngine{knitr::rmarkdown}

@@ -1,6 +1,6 @@
 ---
 title: "Data"
-output: rmarkdown::pdf_document
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Data}
   %\VignetteEncoding{UTF-8}

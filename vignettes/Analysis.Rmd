@@ -1,6 +1,6 @@
 ---
 title: "Analysis"
-output: rmarkdown::pdf_document
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Analysis}
   %\VignetteEngine{knitr::rmarkdown}
