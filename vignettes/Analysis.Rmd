@@ -1,6 +1,6 @@
 ---
 title: "Analysis"
-output: rmarkdown::html_vignette
+output: rmarkdown::pdf_document
 vignette: >
   %\VignetteIndexEntry{Analysis}
   %\VignetteEngine{knitr::rmarkdown}
@@ -14,6 +14,37 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
-library(ybt)
+Analysis is the third and final workflow of the Yolo Bypass Telemetry project.  It begins after the database has been appended with new (formatted) detections and you are ready to generate the annual reproducible Telemetry Report.  
+
+### General Analysis workflow
+
+1. Install the `ybt` package
+2. Knit the current year's version of the annual reproducible Telemetry Report.
+
+
+### 1. Install the `ybt` package
+
+By running:
+```{r, eval=FALSE}
+
+devtools::install_github("fishsciences/ybt", build_vignettes = TRUE)
 ```
+
+This will install all dependencies of the package as well.
+
+### 2. Knit the Reproducible Report for the current year
+
+- First, download the `YBT_Reports` repository (currently hosted on Google Drive).  Open with Rstudio.
+
+- Save a new copy of `Reports/AnnualTelemetrySummary.Rmd` - I suggest saving it to a new directory created to hold all of the reports (example filename convention: ATS_YYYY.Rmd)
+
+- Parameterize the report.  Things that need to be altered are commented. These include:
+   - `focus_yr` (i.e. 2018)
+   - `focus_tg` This is the name of the tag group as it appears in the `tags` table of the database.  Naming convention is the species abbreviation (fca for fall Chinook adult) + underscore + the calendar year in which they were all tagged, i.e. `wst_2012` or `fca_2017`.
+   - relative file paths to the database and the detections, for false detection screening data.
+
+- Knit the report.  This will generate both an html document and a Word document.  The figures in the Word document may not display optimally, so you may need to go through the code in the .Rmd and individually export figures with `ggsave()`.
+
+### Things to remember about the analysis workflow
+
+ - Don't take the reproducible report at face value - always read through it carefully to make sure it passes basic sanity checks.  There may be unpredictable inconsistencies in each year's data that the report doesn't know how to handle automatically.
