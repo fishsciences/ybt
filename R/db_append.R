@@ -71,39 +71,31 @@ sapply(tbls, function(x) dbGetQuery(db, paste("SELECT COUNT(*) FROM" , x)))
 #--------------------------------------------#
 # Deployments tabls - basically build from scratch each time, because it's all in one updated file:
 
-d = as.data.frame(readxl::read_excel("YB_SQL_BaseTables/Deployments.xlsx"))
-
-# format date/time columns as text
-d[, c("DeploymentStart", "DeploymentEnd", "VRLDate")]  = apply(d[, c("DeploymentStart", "DeploymentEnd", "VRLDate")],
-                                                               2,
-                                                               as.character)
-head(d)
-
-# data checks
-str(d)
-unclass(d[, 1:8])
-table(d$Station)
-
-dbWriteTable(conn = db, 
-             name = "deployments", 
-             value = d, 
-             overwrite = TRUE,
-             field.types = c("Location" = "text", 
-                             "StationAbbOld" = "text", 
-                             "Station" = "text", 
-                             "Receiver" = "integer", 
-                             "DetectionYear" = "integer", 
-                             "DeploymentStart" = "text", 
-                             "DeploymentEnd" = "text", 
-                             "VRLDate" = "text", 
-                             "DeploymentNotes" = "text", 
-                             "VRLNotes" = "text")
-)
-
-
-dbListTables(db)
-dbListFields(db, "deployments")
-
-#--------------------------------------------#
-# Disconnect
-dbDisconnect(db)
+write_deployments = function(xlsx_file, db_path,
+                             driver = SQLite())
+{
+    con = connectGDB(db_path, driver)
+    on.exit(dbDisconnect(con))
+    d = as.data.frame(read_excel(xlsx_file), stringsAsFactors = FALSE)
+    
+    ## format date/time columns as text
+    cols = c("DeploymentStart", "DeploymentEnd", "VRLDate")
+    d[cols]  = sapply(d[cols], as.character)
+    
+    dbWriteTable(conn = con, 
+                 name = "deployments", 
+                 value = d, 
+                 overwrite = TRUE,
+                 field.types = c("Location" = "text", 
+                                 "StationAbbOld" = "text", 
+                                 "Station" = "text", 
+                                 "Receiver" = "integer", 
+                                 "DetectionYear" = "integer", 
+                                 "DeploymentStart" = "text", 
+                                 "DeploymentEnd" = "text", 
+                                 "VRLDate" = "text", 
+                                 "DeploymentNotes" = "text", 
+                                 "VRLNotes" = "text")
+                 )
+    return(invisible(NULL))    
+}
