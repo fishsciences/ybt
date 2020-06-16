@@ -4,8 +4,7 @@
 \alias{bard_tags}
 \title{format data for BARD query}
 \usage{
-bard_tags(tagids, df = alltags, tagVar = "TagID",
-  codeVar = "CodeSpace")
+bard_tags(tagids, df = alltags, tagVar = "TagID", codeVar = "CodeSpace")
 }
 \arguments{
 \item{tagids}{a vector of numeric TagIDs}

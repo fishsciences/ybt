@@ -4,9 +4,14 @@
 \alias{bard_query}
 \title{Execute a BARD query}
 \usage{
-bard_query(tagIDs, dateStart = "2012-01-01", dateEnd = Sys.Date(),
+bard_query(
+  tagIDs,
+  dateStart = "2012-01-01",
+  dateEnd = Sys.Date(),
   baseurl = "http://sandbox5.metro.ucdavis.edu/memo/getTagCSV/",
-  curlH = curl, ...)
+  curlH = curl,
+  ...
+)
 }
 \arguments{
 \item{tagIDs}{formatted like those returned from `bard_tags()`}
