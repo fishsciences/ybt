@@ -1,4 +1,6 @@
-#-------------------------------------------------------#
+
+if(FALSE){
+##-------------------------------------------------------#
 # Database set up - only do once.  Appending/adding to the database is done in the append_ scripts.
 # M. Johnston
 # Last done: # Fri Aug 16 14:31:30 2019 ------------------------------
@@ -153,3 +155,4 @@ dbListFields(db, "chn")
 
 # Disconnect
 dbDisconnect(db)
+}

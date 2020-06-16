@@ -1,6 +1,16 @@
+##' Finds the GDB directory
+##'
+##' Convienence wrapper for dir()
+##' @title Find GDB directory
+##' @param dir_name the name of the directory
+##' @param base_dir the directory to begin the search
+##' @return path to directory 
+##' @author Matt Espe
+##' @export
 find_gdb_dir = function(dir_name, base_dir = "~")
 {
-    dir(base_dir, pattern = dir_name, full.names = TRUE, recursive = TRUE)
+    dir(base_dir, pattern = dir_name, full.names = TRUE,
+        recursive = TRUE, include.dirs = TRUE)
 }
 
 find_gdb = function(base_dir = "~", db_filename = "")
