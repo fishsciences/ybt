@@ -1,3 +1,21 @@
+db_init = function(db_file, driver = SQLite(),
+                   con = dbConnect(driver, db_file),
+                   schema = strsplit(paste(readLines(schema_file),
+                                           collapse = " "), ";")[[1]],
+                   schema_file = system.file("create_db.sql", package = "ybt"))
+{
+    on.exit(dbDisconnect(con))
+    
+    if(length(dbListTables(con)))
+        stop("Database file ", db_file, "is not empty. Did you mean to call db_populate()?")
+
+    invisible(sapply(schema, function(x) dbExecute(con, x)))
+           
+    return(invisible(NULL))
+}
+
+
+
 
 if(FALSE){
 ##-------------------------------------------------------#
