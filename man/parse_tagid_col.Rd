@@ -4,12 +4,14 @@
 \alias{parse_tagid_col}
 \title{parse vemco tag info}
 \usage{
-parse_tagid_col(df, tagcol = "TagID")
+parse_tagid_col(df, tagcol = "TagID", sepchar = "-")
 }
 \arguments{
 \item{df}{dataframe with a transmitter column that is formatted as 'Freq-CodeSpace-Transmitter'}
 
 \item{tagcol}{the name of the column you wish to parse}
+
+\item{sepchar}{the character or symbol on which to split; defaults to '-'}
 }
 \value{
 A dataframe with the CodeSpace and TagID columns at the end, with frequency columns removed.
@@ -22,4 +24,7 @@ df <- structure(list(TagID = c("A69-1206-112", "A69-1206-152", "A69-1206-1908"
 ), Monitor = c("VR2W-106683", "VR2W-106683", "VR2W-106683"),
     Detections = c(1L, 1L, 1L)), row.names = c(NA, 3L), class = "data.frame")
 parse_tagid_col(df, "TagID")
+}
+\author{
+Myfanwy Johnston
 }
