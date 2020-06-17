@@ -21,25 +21,44 @@ dets_csv_path <- file.path(gdb_path, file.path("YB_SQL_BaseTables", "Detections"
 
 }
 
-gdb_append_detections = function(new_detections_df, db_path, driver = SQLite(),
-                                 detection_table_nm = "detections")
+
+##' Appends new data to an existing database.
+##' 
+##' Appends new data to an existing database. 
+##' @title YBT Append Detection Observations
+##' @param new_df 
+##' @param db_table 
+##' @param db_path 
+##' @param driver 
+##' @return 
+##' @author Matt Espe
+##' @export
+ybt_db_append = function(new_df, db_table, db_path, driver = SQLite())
 {
     con = connectGDB(db_path, driver)
-    before = dbGetRowCount(con, detection_table_nm)
-    dbCreateTable(con, "det_tmp", dets)
+    if(!dbExistsTable(con, db_table))
+        stop(db_table, " not found in database ", db_path)
+    
+    before = db_nrow(con, db_table)
+    dbCreateTable(con, "tmp", new_df)
 
     on.exit({
-        dbRemoveTable(con, "det_tmp")
+        dbRemoveTable(con, "tmp")
         dbDisconnect(con)
     })
 
-    query = sprintf("INSERT OR IGNORE INTO %s (SELECT * FROM det_tmp)",
-                    detection_table_nm)
-    dbSendQuery(con, query)
+    query = sprintf("INSERT OR IGNORE INTO %s (SELECT * FROM tmp)",
+                    db_table)
+    dbExecute(con, query)
 
-    after = dbGetRowCount(con, detection_table_nm)
+    after = db_nrow(con, db_table)
     message(sprintf("%s records appended to %s", after - before, detection_table,nm))
     return(invisible(NULL))
+}
+
+db_nrow = function(con, tbl)
+{
+    dbGetQuery(con, sprintf("SELECT COUNT(*) FROM %s", tbl))[[1]]
 }
 
 if(FALSE){
