@@ -8,9 +8,9 @@ min_and_max_stn(df)
 }
 \arguments{
 \item{df}{A detections dataframe - currently requires the following columns:
-\item{TagID column called "TagID"}
-\item{Date-time column called "DateTimePST"}
-\item{Grouped station column called "GroupedStn}}
+\item{TagID}{TagID column called "TagID"}
+\item{DateTimePST}{Date-time column called "DateTimePST"}
+\item{GroupedStn}{Grouped station column called "GroupedStn}}
 }
 \value{
 A dataframe with the TagIDs, first and last detections, and first and last stations for each fish.

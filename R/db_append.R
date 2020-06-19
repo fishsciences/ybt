@@ -41,13 +41,7 @@ db_nrow = function(con, tbl)
     dbGetQuery(con, sprintf("SELECT COUNT(*) FROM %s", tbl))[[1]]
 }
 
-if(FALSE){
-################## Travis stopped here when going over this code
 
-# check years/date ranges that are included in the db so far:
-dchk = tbl(db, "detections") %>%
-  collect() 
-}
 
 # DEPLOYMENTS
 #-------------------------------------------------------#
