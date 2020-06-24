@@ -25,7 +25,7 @@ db_init = function(db_file, driver = SQLite(),
     on.exit(dbDisconnect(con))
     
     if(length(dbListTables(con)))
-        stop("Database file ", db_file, "is not empty. Did you mean to call db_populate()?")
+        stop("Database file ", db_file, " is not empty. Did you mean to call db_populate()?")
 
     invisible(sapply(schema, function(x) dbExecute(con, x)))
            

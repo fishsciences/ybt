@@ -32,7 +32,7 @@ ybt_db_append = function(new_df, db_table, db_path, driver = SQLite())
     dbExecute(con, query)
 
     after = db_nrow(con, db_table)
-    message(sprintf("%s records appended to %s", after - before, detection_table,nm))
+    message(sprintf("%s records appended to %s", after - before, detection_table, nm))
     return(invisible(NULL))
 }
 

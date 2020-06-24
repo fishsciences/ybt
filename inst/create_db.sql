@@ -16,7 +16,7 @@ CREATE TABLE tags (
 
 CREATE TABLE detections (
   DateTimeUTC TEXT NOT NULL,
-  Receiver TEXT,
+  Receiver TEXT NOT NULL,
   TagID TEXT NOT NULL,
   TagName TEXT,
   TagSN TEXT,

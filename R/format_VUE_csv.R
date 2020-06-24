@@ -34,6 +34,9 @@ dd = dd[ , -(8:10)]
   dups = sum(i)
   dd = dd[!i,]
   
+  # change columns to character if not already:
+dd[ , c("TagName", "TagSN","SensorValue", "SensorUnit")] = lapply(dd[ , c("TagName", "TagSN","SensorValue", "SensorUnit")], as.character)
+  
   message(sprintf("Format complete; removed %d duplicate detections within TagIDs from %s", 
                   dups, basename(filepath)))
   return(dd)
