@@ -15,12 +15,14 @@ CREATE TABLE tags (
   PRIMARY KEY(TagID, TagSN, FishID));
 
 CREATE TABLE detections (
-  TagID INTEGER NOT NULL,
-  DateTimePST TEXT NOT NULL,
-  Receiver INTEGER NOT NULL,
   DateTimeUTC TEXT NOT NULL,
-  CodeSpace INTEGER,
-  PRIMARY KEY(TagID, DateTimePST, Receiver, CodeSpace)
+  Receiver TEXT,
+  TagID TEXT NOT NULL,
+  TagName TEXT,
+  TagSN TEXT,
+  SensorValue TEXT,
+  SensorUnit TEXT,
+  PRIMARY KEY(TagID, DateTimeUTC, Receiver)
 );
 
 CREATE TABLE deployments (

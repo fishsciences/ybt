@@ -25,14 +25,17 @@ colnames(dd) = c("DateTimeUTC",
                  "Latitude",
                  "Longitude")
 
+dd = dd[ , -(8:10)]
+
   dd$DateTimeUTC = lubridate::ymd_hms(dd$DateTimeUTC, tz = "UTC")
-  
+  dd = dd[!is.na(dd$DateTimeUTC), ]
   # remove duplicate detections within tagids + receivers; slow though - maybe switch to data.table?
   i = duplicated(dd[, c("TagID", "Receiver", "DateTimeUTC")])
   dups = sum(i)
   dd = dd[!i,]
   
-  message(sprintf("Format complete; your data had %d duplicate detections within TagIDs", dups))
+  message(sprintf("Format complete; removed %d duplicate detections within TagIDs from %s", 
+                  dups, basename(filepath)))
   return(dd)
 
 }
