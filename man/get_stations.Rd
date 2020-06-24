@@ -18,7 +18,7 @@ A merged dataframe with Receiver, DateTimePST, Station, and any other columns th
 Get stations - merge deployments and detections data frame so that the correct station name is associated with a given detection and receiver number
 }
 \details{
-This function requires the `data.table` package.  It's important to appropriately join receiver and detection data in a way that ensures:
+It's important to appropriately join receiver and detection data in a way that ensures:
 \enumerate{
 \item the appropriate station is associated with receiver detections of a certain date range.
 \item we can double check that each detection is associated with a valid receiver deployment, i.e. that there are no "orphan" detections.

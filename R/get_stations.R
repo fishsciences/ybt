@@ -2,7 +2,7 @@
 #' @param detections_df Dataframe of Detections - currently requires that the datetime column be named "DateTimePST" and that the Receiver column be named "Receiver"
 #' @param deployments_df Dataframe of receiver deployments.  Must have a Receiver column, a Start column, and an End column.
 #'
-#' @details This function requires the `data.table` package.  It's important to appropriately join receiver and detection data in a way that ensures:
+#' @details It's important to appropriately join receiver and detection data in a way that ensures:
 #' \enumerate{
 #' \item the appropriate station is associated with receiver detections of a certain date range.
 #' \item we can double check that each detection is associated with a valid receiver deployment, i.e. that there are no "orphan" detections.
@@ -16,13 +16,14 @@
 #' get_stations(dets, deps)}
 
 get_stations <- function(detections_df, deployments_df) {
+  
+  x$end = detections_df$DateTimePST
   x = as.data.table(detections_df)
-  x[ , end := DateTimePST]
   y = as.data.table(deployments_df)
   setkey(y, Receiver, Start, End)
   result = foverlaps(x, y, by.x = c('Receiver', 'DateTimePST', 'end'), type = 'within')
-  result[ , end := NULL]
   result <- as.data.frame(result)
+  result$end = NULL
   if(sum(is.na(result$Start)) > 0){
     warning("warning: the resulting dataframe contains NAs in the joining columns - check for orphan detections")
     }
