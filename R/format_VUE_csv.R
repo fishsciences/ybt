@@ -27,7 +27,7 @@ colnames(dd) = c("DateTimeUTC",
 
 dd = dd[ , -(8:10)]
 
-  dd$DateTimeUTC = lubridate::ymd_hms(dd$DateTimeUTC, tz = "UTC")
+  dd$DateTimeUTC = as.character(lubridate::ymd_hms(dd$DateTimeUTC, tz = "UTC"))
   dd = dd[!is.na(dd$DateTimeUTC), ]
   # remove duplicate detections within tagids + receivers; slow though - maybe switch to data.table?
   i = duplicated(dd[, c("TagID", "Receiver", "DateTimeUTC")])
