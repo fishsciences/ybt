@@ -8,7 +8,8 @@ Authors@R: person(given = "Myfanwy", family = "Johnston",
 Maintainer: Myfanwy Johnston <myfanwy.johnston@fishsciences.net>
 Description: This package includes the functions needed to run scripts in the Analysis Workflow of the Yolo Bypass Telemetry project.
 License: GPL (>=3)
-Depends: lubridate
+Depends: lubridate,
+            RSQLite
 Imports: 
     ggplot2,
     CDECRetrieve (>= 0.1.5),

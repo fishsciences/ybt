@@ -6,7 +6,7 @@
 ##' while ensuring that the data meet the constraints.
 ##' @title Initialize a database
 ##' @param db_file string, the full path and name of the database file
-##'     to be initialize.
+##'     to be initialized.
 ##' @param driver A SQLite driver
 ##' @param con A connection to an empty database. If the database does
 ##'     not exist, it will be created.

@@ -14,7 +14,7 @@ db_init(
 }
 \arguments{
 \item{db_file}{string, the full path and name of the database file
-to be initialize.}
+to be initialized.}
 
 \item{driver}{A SQLite driver}
 
