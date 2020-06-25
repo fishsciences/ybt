@@ -22,17 +22,21 @@ ybt_db_append = function(new_df, db_table, db_path, driver = SQLite())
     before = db_nrow(con, db_table)
     dbCreateTable(con, "tmp", new_df)
 
+    # not sure why this workaround is needed
+    if(db_nrow(con, "tmp") == 0)
+        dbAppendTable(con, "tmp", new_df)
+    
     on.exit({
         dbRemoveTable(con, "tmp")
         dbDisconnect(con)
     })
 
-    query = sprintf("INSERT OR IGNORE INTO %s (SELECT * FROM tmp)",
+    query = sprintf("INSERT OR IGNORE INTO %s SELECT * FROM tmp",
                     db_table)
     dbExecute(con, query)
 
     after = db_nrow(con, db_table)
-    message(sprintf("%s records appended to %s", after - before, detection_table, nm))
+    message(sprintf("%s records appended to %s", after - before, db_table))
     return(invisible(NULL))
 }
 
