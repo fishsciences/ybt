@@ -20,22 +20,23 @@ copy_vrls(
 \arguments{
 \item{dir}{string, the base directory to begin looking for files}
 
-\item{dest}{string, a destination directory. Will be created if it
-doesn't exist}
+\item{dest}{string, a destination directory. Will be created if it doesn't exist}
 
 \item{file_regex}{regex for matching}
 
 \item{file_type}{the file extension for files to move}
 
-\item{regex_exclude}{logical, whether the regex should match files
-to exclude or include}
+\item{regex_exclude}{logical, whether the regex should match files to exclude or include}
 
 \item{all_files}{all prospective files to copy}
 
-\item{match_files}{files which match the parameters from the regex
-and file type}
+\item{match_files}{files which match the parameters from the regex and file type}
 
 \item{...}{additional args passed to \code{file.copy}}
+
+\item{full.names}{logical}
+
+\item{recursive}{logical}
 }
 \description{
 Copies vrl files from field directory

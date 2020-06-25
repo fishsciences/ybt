@@ -32,7 +32,7 @@ ybt_db_append = function(new_df, db_table, db_path, driver = SQLite())
     dbExecute(con, query)
 
     after = db_nrow(con, db_table)
-    message(sprintf("%s records appended to %s", after - before, detection_table,nm))
+    message(sprintf("%s records appended to %s", after - before, detection_table, nm))
     return(invisible(NULL))
 }
 
@@ -41,13 +41,7 @@ db_nrow = function(con, tbl)
     dbGetQuery(con, sprintf("SELECT COUNT(*) FROM %s", tbl))[[1]]
 }
 
-if(FALSE){
-################## Travis stopped here when going over this code
 
-# check years/date ranges that are included in the db so far:
-dchk = tbl(db, "detections") %>%
-  collect() 
-}
 
 # DEPLOYMENTS
 #-------------------------------------------------------#
