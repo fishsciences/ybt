@@ -8,4 +8,4 @@
 #'  @import ggplot2
 #'  @import lubridate
 #'  @importFrom data.table rleid rbindlist foverlaps setkey as.data.table
-#'  
+#'  @importFrom readxl read_excel

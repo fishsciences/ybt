@@ -1,8 +1,8 @@
 CREATE TABLE tags (
   DateTagged TEXT,
-  TagID REAL NOT NULL,
-  TagSN REAL NOT NULL,
-  CodeSpace REAL,
+  TagID INTEGER NOT NULL,
+  TagSN INTEGER,
+  CodeSpace INTEGER,
   Species TEXT,
   Sp TEXT,
   TL REAL,
@@ -12,7 +12,7 @@ CREATE TABLE tags (
   TagGroup TEXT,
   Comments TEXT,
   FishID REAL,
-  PRIMARY KEY(TagID, TagSN, FishID));
+  PRIMARY KEY(TagID, TagSN, DateTagged, FishID));
 
 CREATE TABLE detections (
   DateTimeUTC TEXT NOT NULL,
@@ -36,13 +36,13 @@ CREATE TABLE deployments (
   VRLDate TEXT,
   DeploymentNotes TEXT,
   VRLNotes TEXT,
-  PRIMARY KEY(Location, Station, Receiver, DetectionYear)
+  PRIMARY KEY(Station, Receiver, DeploymentStart)
 );
 
 CREATE TABLE chn (
   DateTagged TEXT,
   TagLoc TEXT,
-  TagID INTEGER,
+  TagID INTEGER NOT NULL,
   TagSN INTEGER,
   CodeSpace INTEGER,
   Floy TEXT,
@@ -70,5 +70,23 @@ CREATE TABLE chn (
   VOR NUMERIC,
   Orientation NUMERIC,
   Tide TEXT,
-  PRIMARY KEY(TagID, TagSN)
+  PRIMARY KEY(TagID, TagSN, DateTagged, FishID)
 );
+
+CREATE TABLE wst (
+  DateTagged TEXT,
+  TagID INTEGER NOT NULL,
+  TagSN INTEGER,
+  CodeSpace INTEGER NOT NULL,
+  TagOrder INTEGER,
+  EstTagLife_days REAL,
+  Species TEXT,
+  Sp TEXT,
+  TL REAL,
+  FL REAL,
+  Sex TEXT,
+  TagLoc TEXT,
+  TagGroup TEXT,
+  Comments TEXT,
+  FishID REAL,
+  PRIMARY KEY(TagID, TagSN, DateTagged, FishID));
