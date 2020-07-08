@@ -89,3 +89,21 @@ CREATE TABLE wst (
   Comments TEXT,
   FishID REAL,
   PRIMARY KEY(TagID, TagSN, DateTagged, FishID));
+  
+CREATE TABLE wst (
+  DateTagged TEXT,
+  TagID INTEGER NOT NULL,
+  TagSN INTEGER,
+  CodeSpace INTEGER,
+  TagOrder INTEGER,
+  EstTagLife_days REAL,
+  Species TEXT,
+  Sp TEXT,
+  TL REAL,
+  FL REAL,
+  Sex TEXT,
+  TagLoc TEXT,
+  TagGroup TEXT,
+  Comments TEXT,
+  FishID REAL,
+  PRIMARY KEY(TagID, TagSN, DateTagged, FishID));
