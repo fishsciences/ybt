@@ -30,7 +30,6 @@ CREATE TABLE deployments (
   StationAbbOld TEXT,
   Station TEXT,
   Receiver INTEGER,
-  DetectionYear INTEGER,
   DeploymentStart TEXT,
   DeploymentEnd TEXT,
   VRLDate TEXT,

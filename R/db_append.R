@@ -50,12 +50,12 @@ db_nrow = function(con, tbl)
 # DEPLOYMENTS
 #-------------------------------------------------------#
 #'@export
-write_deployments = function(xlsx_file, db_path,
+write_deployments = function(deps_csv, db_path,
                              driver = SQLite())
 {
     con = connectGDB(db_path, driver)
     on.exit(dbDisconnect(con))
-    d = as.data.frame(readxl::read_excel(xlsx_file), stringsAsFactors = FALSE)
+    d = read.csv(deps_csv, stringsAsFactors = FALSE)
     
     ## format date/time columns as text
     cols = c("DeploymentStart", "DeploymentEnd", "VRLDate")
@@ -69,7 +69,6 @@ write_deployments = function(xlsx_file, db_path,
                                  "StationAbbOld" = "text", 
                                  "Station" = "text", 
                                  "Receiver" = "integer", 
-                                 "DetectionYear" = "integer", 
                                  "DeploymentStart" = "text", 
                                  "DeploymentEnd" = "text", 
                                  "VRLDate" = "text", 
