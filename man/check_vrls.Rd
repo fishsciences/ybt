@@ -32,9 +32,12 @@ against}
 interest}
 }
 \value{
-data.frame, the original serial_date_df with an additional
-    logical column specifying if the VRL record was present in the
-    database.
+list, with two data.frame, the original serial_date_df
+    with an additional logical column specifying if the VRL record
+    was present in the database, and a data.frame of the
+    detections, with an additional logical column indicating if
+    the record in the database has an associated file in the
+    folder.
 }
 \description{
 This checks the serial number and date of VRL records against

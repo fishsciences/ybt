@@ -35,9 +35,12 @@ grab_serial_date = function(x)
 ##'     \code{grab_serial_date}
 ##' @param deploy_query SQL query to grab the deployment records of
 ##'     interest
-##' @return data.frame, the original serial_date_df with an additional
-##'     logical column specifying if the VRL record was present in the
-##'     database.
+##' @return list, with two data.frame, the original serial_date_df
+##'     with an additional logical column specifying if the VRL record
+##'     was present in the database, and a data.frame of the
+##'     detections, with an additional logical column indicating if
+##'     the record in the database has an associated file in the
+##'     folder.
 ##' @author Matt Espe
 ##' @export
 check_vrls = function(vrl_file_dir, db_filepath,
