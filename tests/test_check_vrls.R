@@ -1,4 +1,4 @@
-library(ytb)
+library(ybt)
 
 ff = c("VR2W_106679_20120429_1_BCW.vrl", "VR2W_106679_20121010_1_BCW.vrl", 
 "VR2W_106680_20120502_1_I80_1.vrl", "VR2W_106681_20120429_1_BCE.vrl", 
@@ -15,5 +15,9 @@ base_dir = "~/Dropbox"
 db_loc = file.path(base_dir, "YBTelemetryStudy/yb_database.sqlite")
 con = dbConnect(SQLite(), db_loc)
 
-ans2 = check_deployments(serial_date_df = ans, con = con)
+ans2 = check_vrls(serial_date_df = ans, con = con)
+
+ans3 = check_vrls(serial_date_df = ans, con = con,
+                  date_range = c("2012-01-01", "2012-08-01"))
+
 }

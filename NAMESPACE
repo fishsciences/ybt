@@ -2,7 +2,7 @@
 
 export(bard_query)
 export(bard_tags)
-export(check_deployments)
+export(check_vrls)
 export(connectGDB)
 export(db_init)
 export(find_gdb_dir)

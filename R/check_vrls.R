@@ -40,16 +40,23 @@ grab_serial_date = function(x)
 ##'     database.
 ##' @author Matt Espe
 ##' @export
-check_deployments = function(vrl_file_dir, db_filepath,
-                             con = dbConnect(SQLite(), db_filepath),
-                             vrl_files = list.files(vrl_file_dir, pattern = "\\.vrl$",
-                                                    recursive = TRUE, full.names = TRUE),
-                             serial_date_df = grab_serial_date(vrl_files),
-                             deploy_query = "SELECT Receiver, VRLDate FROM deployments")
+check_vrls = function(vrl_file_dir, db_filepath,
+                      date_range = c("2012-01-01", "2060-01-01"),
+                      con = dbConnect(SQLite(), db_filepath),
+                      vrl_files = list.files(vrl_file_dir, pattern = "\\.vrl$",
+                                             recursive = TRUE, full.names = TRUE),
+                      serial_date_df = grab_serial_date(vrl_files),
+                      deploy_query = "SELECT Receiver, VRLDate FROM deployments")
 {
+    date_range = as.Date(date_range)
+    
     tmp = dbGetQuery(con, deploy_query)
-    i = paste(serial_date_df$serial, serial_date_df$date) %in%
+    tmp = subset(tmp, VRLDate > min(date_range) & VRLDate < max(date_range))
+    in_db = paste(serial_date_df$serial, serial_date_df$date) %in%
         paste(tmp$Receiver, tmp$VRLDate)
+    in_folder = paste(tmp$Receiver, tmp$VRLDate) %in%
+        paste(serial_date_df$serial, serial_date_df$date)
 
-    data.frame(serial_date_df, in_db = i)
+    list(vrl_files = data.frame(serial_date_df, in_db = in_db),
+         db_files = data.frame(tmp, in_folder = in_folder))
 }
