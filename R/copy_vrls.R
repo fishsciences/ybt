@@ -14,6 +14,7 @@
 ##' @param ... additional args passed to \code{file.copy}
 ##' @return NULL
 ##' @author Matt Espe
+##' @export
 copy_vrls = function(dir = ".",
                      dest,
                      file_regex = "RLD",
