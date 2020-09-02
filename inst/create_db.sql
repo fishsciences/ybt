@@ -90,5 +90,4 @@ CREATE TABLE wst (
   Comments TEXT,
   FishID REAL,
   PRIMARY KEY(TagID, TagSN, DateTagged, FishID)
-  );
-  
+);
