@@ -1,9 +1,18 @@
 ## Functions to ID and handle shed tags in the detection histories
 ##' Identify a shed tag
 ##'
-##' .. content for \details{} ..
+##' This function identifies a shed tag, or a large gap in a fish
+##' history, according to if a tag was detected at a single station
+##' for 7 continuous days, without a break in the detections for more
+##' than one hour.
+##'
+##' The \code{tag_tales()} function defaults to lumping all detections
+##' with no more than 1 hour between detections into a single stay. By
+##' default, the shed tag can only be at the last detected station (as
+##' the tag should not be moving once shed). 
+##'  
 ##' @title Identify Shed tags
-##' @param df data.frame of detection histories. 
+##' @param df data.frame of detection histories created by \code{tag_tales()}. 
 ##' @param id_column character, the name of the TagID column
 ##' @param ... additional args passed to id_one_shed
 ##' @return data.frame, with TagID, shed (logical), and long_gap
@@ -15,10 +24,27 @@ identify_sheds = function(df, id_column = "TagID", ...)
    do.call(rbind, by(df, df[[id_column]], id_one_shed, ...))
 }
 
-
+##' Identify a shed or gap in a single fish detection history.
+##'
+##' Identify a shed or gap in a single fish detection history.
+##' 
+##' @title Identify shed for one tag
+##' @param df a data.frame of detection history for a single tagID,
+##'     i.e., a single fish
+##' @param max_last_residence integer, the max residence time allowed,
+##'     in days
+##' @param max_gap integer, the max gap allowed, in days
+##' @param id_col character, the name of the TagID column
+##' @param stn_col character, the name of the stations column
+##' @param arrival_col character, the name of the arrivals column
+##' @param depart_col character, the name of the departures column
+##' @return a data.frame for a single fish, with logical columns
+##'     indicating if this tag was likely a shed, or if it had large
+##'     gap in the detection history
+##' @author Matt Espe
+##' @export
 id_one_shed = function(df,
                        max_last_residence = 7, # days
-                       max_shed_gap = 1, # hours
                        max_gap = 60, # days
                        id_col = "TagID",
                        stn_col = "GroupedStn",
@@ -81,19 +107,20 @@ max_gap = function(df, arrive_column = "arrival",
 }
 
 
-
-
 truncate_sheds = function()
 {
-
+    
 
 }
 
-    
+
+if(FALSE){
 overlap_hist = function(df)
 {
     sapply(seq_along(df$arrival), function(i){
         x = df$arrival[i]
         any(x > df$arrival[-i] & x < df$departure[-i])
     })
+}
+
 }
