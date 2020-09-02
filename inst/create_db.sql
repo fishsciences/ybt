@@ -12,7 +12,8 @@ CREATE TABLE tags (
   TagGroup TEXT,
   Comments TEXT,
   FishID REAL,
-  PRIMARY KEY(TagID, TagSN, DateTagged, FishID));
+  PRIMARY KEY(TagID, TagSN, DateTagged, FishID)
+);
 
 CREATE TABLE detections (
   DateTimeUTC TEXT NOT NULL,
@@ -69,10 +70,9 @@ CREATE TABLE chn (
   VOR NUMERIC,
   Orientation NUMERIC,
   Tide TEXT,
-  PRIMARY KEY(TagID, TagSN, DateTagged, FishID)
+  PRIMARY KEY(TagID, TagSN, DateTagged)
 );
 
-  
 CREATE TABLE wst (
   DateTagged TEXT,
   TagID INTEGER NOT NULL,
@@ -89,4 +89,6 @@ CREATE TABLE wst (
   TagGroup TEXT,
   Comments TEXT,
   FishID REAL,
-  PRIMARY KEY(TagID, TagSN, DateTagged, FishID));
+  PRIMARY KEY(TagID, TagSN, DateTagged, FishID)
+  );
+  
