@@ -24,16 +24,25 @@ get_exit_times <- function(df, TagID_col){    # df = detections data frame
 }
 
 get_exit_times_onefish <- function(test){
-  if ("BCS" %in% test$GroupedStn) {
-    test$ExitTime = test$departure[test$arrival == min(test$arrival[test$GroupedStn == "BCS"])]
-  } else if ("BCN" %in% test$GroupedStn) {
-        test$ExitTime = test$departure[test$arrival == min(test$arrival[test$GroupedStn == "BCN"])]
-    } else if ("YBBTD" %in% test$GroupedStn) {
-          test$ExitTime = test$departure[test$arrival == min(test$arrival[test$GroupedStn == "YBBTD"])]
-      } else {
-          test$ExitTime = "NA"}
+    stations = c("BCS", "BCN", "YBBTD")
+
+    stn = which(stations %in% test$GroupStn)[1]
+    
+    test$ExitTime = if ("BCS" %in% test$GroupedStn) {
+                        exit_time(test, "BCS")
+                    } else if ("BCN" %in% test$GroupedStn) {
+                        exit_time(test, "BCN")
+                    } else if ("YBBTD" %in% test$GroupedStn) {
+                        exit_time(test, "YBBTD")
+                    } else {
+                        test$ExitTime = "NA"}
   
   return(test)
+}
+
+exit_time = function(df, station)
+{
+    df$departure[df$arrival == min(df$arrival[df$GroupedStn == "BCS"])]
 }
 
 calc_TE <- function(df){
