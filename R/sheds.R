@@ -45,7 +45,7 @@ identify_sheds = function(df, id_column = "TagID", ...)
 ##' @export
 id_one_shed = function(df,
                        max_last_residence = 7, # days
-                       max_gap = 60, # days
+                       max_gap_days = 60, # days
                        id_col = "TagID",
                        stn_col = "GroupedStn",
                        arrival_col = "arrival",
@@ -57,12 +57,11 @@ id_one_shed = function(df,
     
     gaps = max_gap(df, arrival_col, depart_col)
     
-    is_shed = res_times[length(res_times)] > max_last_residence &
-        (gaps[length(gaps)] < (max_shed_gap/24)) ## One hour
+    is_shed = res_times[length(res_times)] > max_last_residence
     
     return(data.frame(TagID = unique(df[[id_col]]),
                       shed = is_shed,
-                      long_gap = any(gaps > max_gap, na.rm = TRUE)))    
+                      long_gap = any(gaps > max_gap_days, na.rm = TRUE)))    
 }
 
 last_residence_time = function(df,
