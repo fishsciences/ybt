@@ -17,9 +17,10 @@
 
 get_stations <- function(detections_df, deployments_df) {
   
-  x$end = detections_df$DateTimePST
   x = as.data.table(detections_df)
   y = as.data.table(deployments_df)
+  x$end = detections_df$DateTimePST
+
   setkey(y, Receiver, DeploymentStart, DeploymentEnd)
   result = foverlaps(x, y, by.x = c('Receiver', 'DateTimePST', 'end'), type = 'within')
   result <- as.data.frame(result)
