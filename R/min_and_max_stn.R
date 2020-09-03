@@ -1,9 +1,11 @@
 #' Get Minimum and Maximum Detection of a Tagged Fish
 #'
 #' @param df A detections dataframe - currently requires the following columns:
+#' \describe{
 #' \item{TagID}{TagID column called "TagID"}
 #' \item{DateTimePST}{Date-time column called "DateTimePST"}
 #' \item{GroupedStn}{Grouped station column called "GroupedStn}
+#' }
 #' @return A dataframe with the TagIDs, first and last detections, and first and last stations for each fish.
 #' @export
 #' @examples
