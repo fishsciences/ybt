@@ -42,3 +42,30 @@ dd[ , c("TagName", "TagSN","SensorValue", "SensorUnit")] = lapply(dd[ , c("TagNa
   return(dd)
 
 }
+
+
+#' Format detections that have been queried from database
+#' 
+#' This function parses the TagID and Receiver columns from the detections table of the database, creates a DateTimePST column, and formats all date columns to "%Y-%m-%d %H:%M:%S".
+#' 
+#' @param dets_df Detections dataframe as it is returned by dbGetQuery("select * from detections").
+#' @param tagid_col Quoted name of the column with Tag or Fish IDs in it (defaults to "TagID"); passed along to parse_tagid_col().
+#' @param rec_col Quoted name of the column with the Receiver ID in it (defaults to "Receiver"); passed along to parse_receiver_col().
+#' @param datetime_col Quoted name of the column with detection date time stamps; defaults to "DateTimeUTC".
+#' @return A dataframe with 10 formatted columns.
+#' @export
+
+
+format_detections <- function(dets_df, tagid_col = "TagID", 
+                              rec_col = "Receiver",
+                              datetime_col = "DateTimeUTC") {
+  
+  df = parse_tagid_col(dets_df, tagcol = tagid_col)
+  df = parse_receiver_col(df, reccol = "Receiver")
+  df[[datetime_col]] = ymd_hms(df[[datetime_col]])
+  df$DateTimePST = with_tz(df[[datetime_col]], "Pacific/Pitcairn")
+  
+  return(df)
+  
+  
+}

@@ -43,8 +43,10 @@ parse_receiver_col <- function(df, reccol = "Receiver") {
 parse_tagid_col <- function(df, tagcol = "TagID", sepchar = "-") {
   
   names(df)[names(df) == tagcol] = "SepTagID" # rename the old combined tagid col
-  out = as.data.frame(do.call(rbind, strsplit(as.character(df$SepTagID), split = sepchar)),
-                  stringsAsFactors = FALSE)
+  out = as.data.frame(do.call(rbind, 
+                              strsplit(as.character(df$SepTagID), 
+                                       split = sepchar)),
+                      stringsAsFactors = FALSE)
   
   colnames(out) = c("freq", "CodeSpace", "TagID")
   final = cbind(df, out)

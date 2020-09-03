@@ -9,7 +9,7 @@ get_stations(detections_df, deployments_df)
 \arguments{
 \item{detections_df}{Dataframe of Detections - currently requires that the datetime column be named "DateTimePST" and that the Receiver column be named "Receiver"}
 
-\item{deployments_df}{Dataframe of receiver deployments.  Must have a Receiver column, a Start column, and an End column.}
+\item{deployments_df}{Dataframe of receiver deployments.  Must have a Receiver column, a DeploymentStart column, and a DeploymentEnd column.}
 }
 \value{
 A merged dataframe with Receiver, DateTimePST, Station, and any other columns the detections_df had originally
