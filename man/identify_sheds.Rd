@@ -7,7 +7,7 @@
 identify_sheds(df, id_column = "TagID", ...)
 }
 \arguments{
-\item{df}{data.frame of detection histories.}
+\item{df}{data.frame of detection histories created by \code{tag_tales()}.}
 
 \item{id_column}{character, the name of the TagID column}
 
@@ -21,7 +21,15 @@ data.frame, with TagID, shed (logical), and long_gap
 Identify a shed tag
 }
 \details{
-.. content for \details{} ..
+This function identifies a shed tag, or a large gap in a fish
+history, according to if a tag was detected at a single station
+for 7 continuous days, without a break in the detections for more
+than one hour.
+
+The \code{tag_tales()} function defaults to lumping all detections
+with no more than 1 hour between detections into a single stay. By
+default, the shed tag can only be at the last detected station (as
+the tag should not be moving once shed).
 }
 \author{
 Matt Espe
