@@ -16,7 +16,7 @@ bard_query = function(tagids,
                         curlH = curl, ...)
 {
     url = paste0(baseurl,
-                 paste(tagIDs, collapse = ","), "/",
+                 paste(tagids, collapse = ","), "/",
                  dateStart, "/", dateEnd)
     bq <- fromJSON(getURL(url, curl = curlH, ...))
     bq <- as.data.frame(data.table::rbindlist(bq))
