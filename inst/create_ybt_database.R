@@ -7,7 +7,7 @@ library(RSQLite)
 source("R/utils.R")
 
 # database filepath
-db_fp = "ybt_database.sqlite" 
+db_fp = "~/DropboxCFS/NewPROJECTS/AECCA-2018-YoloTelemetry/DELIVERABLES/Database/ybt_database.sqlite" 
 
 # initialize database
 ybt::db_init(db_fp)
@@ -51,7 +51,9 @@ ybt_db_append(dd,
 #-------------------------------------------------------#
 # DEPLOYMENTS
 #-------------------------------------------------------#
-# Last appended/overwritten: Wed Sep  2 14:13:47 2020 
+# Last appended/overwritten: 
+# Thu Sep  3 09:53:53 2020 ------------------------------
+
 # deployments table filepath
 deps_fp = "~/DropboxCFS/NewPROJECTS/AECCA-2018-YoloTelemetry/WORKING/YB_SQL_BaseTables/Deployments.csv"
 
