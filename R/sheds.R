@@ -150,11 +150,11 @@ truncate_sheds = function(raw_detection_df, TagIDs, keep_last = 2L,
 
 trunc_one = function(df, cut_pt, datetime_col = "DateTimePST")
 {
-    i = which(df[[datetime_col]] == cut_pt)
-    if(!length(i))
-        stop("Matching cutpoint not found in data.frame")
+    i = df[[datetime_col]] <= cut_pt
+    if(all(i))
+        warning("No data cut from: ", unique(df$TagID))
 
-    df[1:i,]  
+    df[i,]  
 }
 
 
@@ -171,7 +171,7 @@ find_one_cutpt = function(df, keep = 2,
     cutpt = arrival + adjust * keep
 
     i = rev(which(df[[datetime_col]] <= cutpt))[1]
-    if(!length(i))
+    if(is.na(i))
         stop("No valid cutpoint found.") ## might be a bad idea
 
     return(df[[datetime_col]][i])
