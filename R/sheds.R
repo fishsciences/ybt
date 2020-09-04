@@ -132,18 +132,20 @@ truncate_sheds = function(raw_detection_df, TagIDs, keep_last = 2L,
                           Station_col = "GroupedStn",
                           DateTime_col = "DateTimePST")
 {
+    if(!is.character(TagIDs))
+        TagIDs = as.character(TagIDs)
+    
     if(!is.null(time_stamps) && length(TagIDs) != length(time_stamps))
         stop("Please provide the same number of time_stamps as TagIDs")
     
     dfs_split = split(raw_detection_df, raw_detection_df[[TagID_col]])
-    i = names(dfs_split) %in% TagIDs
 
     if(is.null(time_stamps))
-        time_stamps = sapply(dfs_split[i], find_one_cutpt, keep = keep_last,
+        time_stamps = sapply(dfs_split[TagIDs], find_one_cutpt, keep = keep_last,
                            unit = units, datetime_col = DateTime_col,
                            station_col = Station_col)
 
-    dfs_split[i] = mapply(trunc_one, df = dfs_split[i],
+    dfs_split[TagIDs] = mapply(trunc_one, df = dfs_split[TagIDs],
                           cut_pt = time_stamps, datetime_col = DateTime_col,
                           SIMPLIFY = FALSE)
     do.call(rbind,dfs_split)    
