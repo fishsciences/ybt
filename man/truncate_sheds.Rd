@@ -27,7 +27,8 @@ final station history}
 
 \item{time_stamps}{Optional, if provided these are used as the
 cutoff for each tagID. There must be one time_stamp for each
-tagID.}
+tagID. The function will only include DateTimes which are less
+or equal to this timestep in the results}
 
 \item{TagID_col}{character, the column name for the TagID}
 

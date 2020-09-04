@@ -117,7 +117,8 @@ max_gap = function(df, arrive_column = "arrival",
 ##' @param units character, either days or hours
 ##' @param time_stamps Optional, if provided these are used as the
 ##'     cutoff for each tagID. There must be one time_stamp for each
-##'     tagID.
+##'     tagID. The function will only include DateTimes which are less
+##'     or equal to this timestep in the results
 ##' @param TagID_col character, the column name for the TagID
 ##' @param Station_col character, the column name for the station
 ##' @param DateTime_col character, the column name for DateTime
