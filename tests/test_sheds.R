@@ -24,6 +24,15 @@ a = truncate_sheds(tag_tale_test_df, 2590,
                    time_stamps = tag_tale_test_df$DateTimePST[200])
 stopifnot(nrow(a) == 200)
 
+##----------------------------------------##
+## test on df not in order
+d = tag_tale_test_df[sample(nrow(tag_tale_test_df)),]
+
+a = truncate_sheds(d, 2590,
+                   time_stamps = tag_tale_test_df$DateTimePST[200])
+stopifnot(nrow(a) == 200)
+
+
 if(FALSE){
     dd = readRDS("~/Dropbox/2018-AECOMM-Yolo-Telemetry-External/data/sheds_in.rds")
     sheds <- c(13729, 20168, 20164, 37835, 2600, 2625, 9986, 2619)
