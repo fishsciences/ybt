@@ -105,13 +105,77 @@ max_gap = function(df, arrive_column = "arrival",
     max(difftime(df[[arrive_column]][-1], df[[depart_column]][-n], units = unit))
 }
 
-
-truncate_sheds = function()
+##' Truncates the detection histories to either a number of days or
+##' hours after the fish first visit a station, or if a timestamp is
+##' provided, to that timestamp.
+##' 
+##' @title Truncate Detection Histories
+##' @param raw_detection_df data.frame of raw detection histories
+##' @param TagIDs vector, the TagIDs to truncate
+##' @param keep_last integer, amount of detections to keep in the
+##'     final station history
+##' @param units character, either days or hours
+##' @param time_stamps Optional, if provided these are used as the
+##'     cutoff for each tagID. There must be one time_stamp for each
+##'     tagID.
+##' @param TagID_col character, the column name for the TagID
+##' @param Station_col character, the column name for the station
+##' @param DateTime_col character, the column name for DateTime
+##' @return data.frame, with shed tags truncated
+##' @author Matt Espe
+##' @export
+truncate_sheds = function(raw_detection_df, TagIDs, keep_last = 2L,
+                          units = "days",
+                          time_stamps = NULL, 
+                          TagID_col = "TagID",
+                          Station_col = "GroupedStn",
+                          DateTime_col = "DateTimePST")
 {
+    if(!is.null(time_stamps) && length(TagIDs) != length(time_stamps))
+        stop("Please provide the same number of time_stamps as TagIDs")
     
+    dfs_split = split(raw_detection_df, raw_detection_df[[TagID_col]])
+    i = names(dfs_split) %in% TagIDs
 
+    if(is.null(time_stamps))
+        time_stamps = sapply(dfs_split[i], find_one_cutpt, keep = keep_last,
+                           unit = units, datetime_col = DateTime_col,
+                           station_col = Station_col)
+
+    dfs_split[i] = mapply(trunc_one, df = dfs_split[i],
+                          cut_pt = time_stamps, datetime_col = DateTime_col,
+                          SIMPLIFY = FALSE)
+    do.call(rbind,dfs_split)    
 }
 
+trunc_one = function(df, cut_pt, datetime_col = "DateTimePST")
+{
+    i = which(df[[datetime_col]] == cut_pt)
+    if(!length(i))
+        stop("Matching cutpoint not found in data.frame")
+
+    df[1:i,]  
+}
+
+
+find_one_cutpt = function(df, keep = 2,
+                          datetime_col = "DateTimePST",
+                          station_col = "GroupedStn",
+                          unit = "days",
+                          adjust = switch(unit, days = 60*60*24, hours = 60*60))
+{
+    df = df[order(df[[datetime_col]]),]
+    last_station = df[[station_col]][nrow(df)]
+    arrival = df[[datetime_col]][df[[station_col]] == last_station][1]
+
+    cutpt = arrival + adjust * keep
+
+    i = rev(which(df[[datetime_col]] <= cutpt))[1]
+    if(!length(i))
+        stop("No valid cutpoint found.") ## might be a bad idea
+
+    return(df[[datetime_col]][i])
+}
 
 if(FALSE){
 overlap_hist = function(df)
