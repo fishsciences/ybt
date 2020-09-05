@@ -2,6 +2,7 @@
 
 export(bard_query)
 export(bard_tags)
+export(calc_yb_residence)
 export(check_vrls)
 export(connectGDB)
 export(copy_vrls)

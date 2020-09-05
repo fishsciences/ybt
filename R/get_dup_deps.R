@@ -4,11 +4,11 @@
 ##'@return a vector of receiver serial numbers that are associated with more than one station
 ##'@details  as of July 2019, there are only two receivers that have been used and then re-deployed in another place: Above Ag4/Below Wallace Weir, and Above Wallace Weir/Below Los Rios Check Dam.
 #'@export
-#'@examples
-#'\dontrun{
-#' deps <- dbGetQuery(con, "select * from deployments)  # where con = yb database connection
-#' get_dup_deps(deps)
-#' }
+##'@examples
+##'\dontrun{
+##' deps <- dbGetQuery(con, "select * from deployments")  
+##' get_dup_deps(deps)
+##' }
 
 get_dup_deps <- function(dep_df)
 {

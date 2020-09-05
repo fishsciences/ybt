@@ -18,3 +18,9 @@ Get duplicate deployments - Find receivers with associated with more than one st
 \details{
 as of July 2019, there are only two receivers that have been used and then re-deployed in another place: Above Ag4/Below Wallace Weir, and Above Wallace Weir/Below Los Rios Check Dam.
 }
+\examples{
+\dontrun{
+deps <- dbGetQuery(con, "select * from deployments")  
+get_dup_deps(deps)
+}
+}

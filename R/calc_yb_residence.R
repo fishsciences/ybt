@@ -5,19 +5,20 @@
 ##' -  A "ReleaseTime" column that indicates the release time for each TagID, formatted as Y-m-d hh:mm:ss.
 ##' 
 ##' - arrival and departure columns, like those resulting from the tag_tales() function.
+##' @param dets_df detections data frame that is the result of the tag_tales function, with a ReleaseTime column, an arrival column, and a departure column
+##' @param TagID_col name of the tagid column
+##' @return A data frame of TagIDs and residence times
+##' @details this function is designed to work on one detection year at at ime
+##' @export
 
-
-# R script used to calculate residence in past:
-#-------------------------------------------------------#
-library(lubridate)
 
 # Steps:
 ## 1. split detections df by TagID col
 ## 2. see if TagID was detected at each of the three exit stations, by priority; take the departure time corresponding to the minimum arrival time at that receiver (to catch their first departure).
 ## 3. Bind their release times and departure times together, and calculate the time elapsed between them in days.
 
-get_exit_times <- function(df, TagID_col){    # df = detections data frame
-  test <- split(df, TagID_col)                # split by TagID col
+calc_yb_residence <- function(dets_df, TagID_col = "TagID"){    # df = detections data frame
+  test <- split(dets_df, TagID_col)                # split by TagID col
   tmp = lapply(test, get_exit_times_onefish)     # apply get exit times one fish fxn
   fishdeps = do.call(rbind, tmp)              # combine into a fish departures df
   fishdeps = calc_TE(fishdeps)                # calculate time elapsed
