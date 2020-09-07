@@ -24,7 +24,8 @@ calc_yb_residence <- function(dets_df, TagID_col = "TagID"){    # df = detection
   fishdeps = calc_TE(fishdeps)                # calculate time elapsed
 }
 
-get_exit_times_onefish <- function(test){
+get_exit_times_onefish <- function(test){ # where test is split df from fxn above
+  
     stations = c("BCS", "BCN", "YBBTD")
 
     stn = which(stations %in% test$GroupStn)[1]
@@ -43,7 +44,7 @@ get_exit_times_onefish <- function(test){
 
 exit_time = function(df, station)
 {
-    df$departure[df$arrival == min(df$arrival[df$GroupedStn == "BCS"])]
+    df$departure[df$arrival == min(df$arrival[df$GroupedStn == station])]
 }
 
 calc_TE <- function(df){
