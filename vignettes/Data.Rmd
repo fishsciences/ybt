@@ -1,6 +1,6 @@
 ---
-title: "Data"
-output: rmarkdown::html_vignette
+title: "YBT Data and Database"
+output: rmarkdown::pdf_document
 vignette: >
   %\VignetteIndexEntry{Data}
   %\VignetteEncoding{UTF-8}
@@ -16,102 +16,118 @@ knitr::opts_chunk$set(
 )
 ```
 
+
 ## Background
 
-There are four types of data that are tied to all of the workflows: tagging data, detection data, deployment data, and shed tag/migratory fate data.  All data for the database is contained in the `YB Telemetry Study/YB_SQL_BaseTables` directory on Google Drive. 
+This vignette covers the data and database workflows of the Yolo Bypass Telemetry Project (YBT).
 
-#### General data workflow
+There are four types of data associated with the YBT data and database workflows: tagging data, detection data, deployment data, and shed tag/migratory fate data.  All raw data for the database is contained in the `YB_SQL_BaseTables` subdirectory of the project folder on Dropbox. All templates for the data types are housed in the `DatabaseTemplates` subfolder of the `SOPs` subdirectory.
 
-1. Update `Deployments.xlsx` after receiver downloads or deployments happen.
-2. Update `Chinook.xlsx` and `Tags.xlsx` after tagging takes place.
-3. Update `Sheds.xlsx` throughout the tagging season and as analysis discovers more shed/mortality tags.
-4. Save to Google Drive.
-5. When you are ready to update the database (i.e. to begin the `Database` workflow), download a full copy of the `YB Telemetry Study` folder to the computer you'll be updating the database with, and keep the folder's default download name, which should include the date of download.
+The database is already set up with past years' data.  This means that in general, the ongoing data and database workflow is: 1) collect/digitize new data, and 2) append that data to the database with specialized functions in the `ybt` R package.
 
-#### Things to remember for all data and files:
+## Things to remember for all data and files:
 
-1. The column names of base spreadsheets should not be changed without consultation, as much of the database building and cleaning code depends on these variable names.
-2. Data from past detection years is not necessarily housed or named in the same way as it will be going forward.
-3. All times should be in Pacific Standard Time, not clock time, and the format is YYYY-DD-MM HH:MM:SS.  When entering dates and times in Excel, either store the column as text/general format (preferred), or choose this custom format from the Date or Time format menu.
-4. Update all editable datasheets ON Google Drive using Google Sheets.  This ensures a kind of version control, and prevents having lots of copies of the data lying around.
+1. The column names of templates should not be changed without consultation, as much of the database building and cleaning code depends on these variable names.
 
+2. Data from past detection years is not necessarily housed or named in the same way as is now.
+
+3. All times should be in Pacific Standard Time, not clock time, and the format is YYYY-DD-MM HH:MM:SS.  When entering dates and times in Excel, they must be entered in this format and converted to TEXT, as the sqlite database recognizes and expects them in this format.
+
+
+## Data Workflows
 
 ### 1. Deployments
 
-All information about receiver deployments that is used by the `ybt` package is stored in the "Deployments.xlsx" spreadsheet, currently hosted on Google Drive (as of August 2019).  This forms the basis of the `deployments` table in the `yb_database.sqlite` database, which can be viewed by calling:
+The deployments table ensures that every detection in the Yolo Bypass detection database has a "home."  That is, that no detections exist outside of the deployment window (`DeploymentStart` - `DeploymentEnd`) of some receiver within the array.
 
-```{r, echo=TRUE, eval=FALSE}
-library(dplyr)
-db = RSQLite::dbConnect(RSQLite::SQLite(), "yb_database.sqlite") # change to your correct relative path
+This role is very important, and thus recording the `DeploymentStart` date, in particular, is very important at the data stage.
 
-deps = tbl(db, "deployments") %>% 
-  collect()
-
-str(deps[1:5, ])
-```
-
-```{r, echo=FALSE, eval=TRUE, warning=FALSE, message=FALSE}
-
-pdeps <- structure(list(Location = c("Base of the confluence southeast", 
-"Base of the confluence southeast", "Base of the confluence southeast", 
-"Base of the confluence southeast", "Base of the confluence southeast"
-), StationAbbOld = c("BCE2", "BCE2", "BCE2", "BCE2", "BCE2"), 
-    Station = c("YBCSSE", "YBCSSE", "YBCSSE", "YBCSSE", "YBCSSE"
-    ), Receiver = c(106092L, 106092L, 106092L, 106092L, 106092L
-    ), DetectionYear = c(2012L, 2012L, 2013L, 2013L, 2014L), 
-    DeploymentStart = c("2012-12-18 12:14:55", "2013-05-30 11:52:00", 
-    "2013-10-24 10:03:00", "2014-05-15 08:44:44", "2014-08-22 09:25:00"
-    ), DeploymentEnd = c("2013-05-30 11:34:00", "2013-10-24 09:56:00", 
-    "2014-05-15 07:59:00", "2014-08-22 09:09:15", "2015-01-28 11:59:00"
-    ), VRLDate = c("2013-05-30", "2013-10-24", "2014-05-15", 
-    "2014-08-22", "2015-01-28"), DeploymentNotes = c("new receiver", 
-    "brought back up to re-initialize because VUE froze; added 180khz", 
-    "had trouble downloading on Ryan's comp; downloaded to tablet. Left 180khz for range tests", 
-    "Upgraded firmware on pull", "12pm tester tag 8K+ dets.  Left data on.  Battery reading 3.25 V, lower than others.  Replaced cable splice."
-    ), VRLNotes = c(NA_character_, NA_character_, NA_character_, 
-    NA_character_, NA_character_)), class = c("tbl_df", "tbl", 
-"data.frame"), row.names = c(NA, -5L))
-
-str(pdeps)
-
-```
-
-The deployments table serves two essential functions:
-
- 1) It ensures that every detection in the Yolo Bypass detection database has a "home."  That is, that no detections exist outside of the deployment window (`DeploymentStart` - `DeploymentEnd`) of some receiver within the array.
-
- 2) It is the official record of vrl detection year membership, i.e. what detection year a given vrl belongs to, because detection year membership is determined by the `DeploymentStart` date of that vrl's receiver.
- 
-These two roles are very important, and thus recording the `DeploymentStart` date, in particular, is very important at the data stage.
-
-####  Data procedure for deployments:
-
- - Follow the instructions in the Downloads SOP.
- - Whenever a receiver is deployed for the first time or downloaded at its station, open `Deployments.xlsx` it in Google Sheets, create a blank row under the receiver location in question, and fill out the fields in the row.
- 
 ####  Things to remember about deployment data:
 
-1. The Station names MUST match the official Station names used in the cleaning scripts.  They are correct on the spreadsheet - just make sure they match when you're entering a new line.
+1. The Station names MUST match the official Station names used in the cleaning scripts.  They are correct on the field template spreadsheet - just make sure they still match when you're digitizing the field datasheet.
 
-2. Each row of the spreadsheet must have a `DeploymentStart` date/time AND a `DeploymentEnd` time. In practice, what this means is that there may be `NAs` in many `DeploymentEnd` fields, especially after the first round of downloads for a detection year. 
+2. Each row of the .csv template spreadsheet must have a `DeploymentStart` date/time. In practice, what this means is that there may be `NAs` in many `DeploymentEnd` fields, especially after the first round of downloads for a detection year. 
 
 3. A deployment starts when the receiver is actually submerged in the field for the first time, or when it is submerged after having just been downloaded.  A deployment ENDs when the receiver is pulled out of the water before being downloaded, or when it is pulled for the season, or when it is swapped out with another receiver, i.e., it ends when that receiver cannot record any more detections for that deployment period.
 
-## 2. Tags
+### Deployment  Data Workflow:
 
-Similar to the `deployments` table, there is a `tags` table in the `yb_database.sqlite` database. This table includes metadata types that are common to both white sturgeon and Chinook salmon.  Whenever new tagged fish are released, it is important to update the `Tags.xlsx` file on Google Drive.
+1. Prior to going out to complete downloads, run the `ybt::make_deployments_fieldsheet()` function, supplying the `Stations` argument with the stations you plan to download.  This will create a .csv of the field datasheet template, which you can print, fill out in the field, and digitize upon return, saving the final digitized .csv with the field vrl naming conventions.
 
-In addition to `Tags.xlsx`, the `Tags/` directory also contains a spreadsheet `Chinook.xlsx`, which is specific to Chinook salmon tagging metadata.  This spreadsheet forms the `chn` table in the database, and includes the particulars of surgery, RAMP scores, capture times, etc, and should be updated separately.  A similar record may be created for white sturgeon in the future.
+2. In the field, follow the instructions in the Downloads SOP.
+
+3. After digitizing and double-checking your deployments .csv with your new deployment info, run the `write_deployments()` function with your .csv to append the new deployments to the database.
+ 
+ 
+
+### 2. Tags
+
+There are actually three tagging metadata tables in the .sqlite database: `tags`, `chn`, and `wst`.  Each one has a template .csv in the `SOPs/DatabaseTemplates/` folder, and these templates can be used to create a .csv that can be added to the database with the `ybt_db_append()` function.
 
 #### Things to remember about tag data:
 
 1. When a tag is recovered and redeployed on a second fish in the same season, make sure to record its second deployment in the database tables (`tags` and `chn`) under a made-up numeric TagID (i.e. `7777`), with the original (actual) transmitter code in the `Comments` field.  These tags require special handling in the analysis workflow.
 
+#### Tagging Data Workflow
 
-## 3. Detections
+1. Update/populate the appropriate tagging `.csv` templates with new tagging info, and save with a new date-specific filename, i.e "chn_2020-12-31.csv" or "tags_2020-12-31.csv".
 
-The detections data workflow is a bit more involved, and so it is covered in the `Database` vignette.
+2. Append new tagging data to the database with the `ybt::ybt_db_append()` function.
 
-## 4. Shed tags
 
-The identification of shed tags is an ongoing process.  The `Sheds.xlsx` spreadsheet in the `YB_SQL_BaseTables` directory is just a record of these tags - update it online as you find them or receive information about fish fates, but nothing in the current analysis workflow depends on this spreadsheet because it's in flux.
+### 3. Detections
+
+The detections are (of course) the hardest part of this workflow, and so they get their own vignette, which you can bring up with `vignette(topic = "Database-detections", package = "ybt")`.
+
+
+### 4. Shed and Receovered tags
+
+The identification of shed tags is an ongoing process.  The `Sheds.xlsx` and `Recoveries.xlsx` spreadsheets in the `YB_SQL_BaseTables` directory keep a record of these tags - we update them as we go.  We have created two functions in the `ybt` package to help identify and handle detections from shed tags: `ybt::identify_sheds()` and `ybt::truncate_sheds()`.
+
+#### Shed and Recovered Tags Data Workflow:
+
+1. Update `Recoveries.xlsx` throughout the tagging season as recovery info comes in.
+
+
+# Database Workflow
+
+## Creating the database from scratch
+
+This can be done with the `create_ybt_database.R` script in the `inst/` directory of the `ybt` package.  It's not a very user-friendly process (kind of on purpose), so please let me know if you need to do it and I can walk you through the script the first time.
+
+
+## Querying the database
+
+If you already know `SQL`, you can easily deploy raw `SQL` queries of the database with the `RSQLite::dbGetQuery()` function.  If you're more comfortable with `dplyr`, you can also use it to construct and run database queries (please see [this tutorial](https://db.rstudio.com/dplyr/) for more information).  Some examples of common database queries are below, but all the queries you need for the Analysis workflow are pre-written into the scripts and reproducible report.
+
+```{r, eval=FALSE, echo=TRUE}
+# database connection: requires >= RSQLite 2.1.1
+library(dplyr)
+db = RSQLite::dbConnect(RSQLite::SQLite(), "../yb_database.sqlite") # check relative path
+
+# get general info about database
+dbListTables(db)
+tbls = dbListTables(db)
+# how many rows per table?
+sapply(tbls, function(x) dbGetQuery(db, paste("SELECT COUNT(*) FROM" , x)))
+# how many/what fields per table?
+sapply(tbls, dbListFields, conn = db)
+
+# All tagging metadata (including both wst and chinook)
+alltags = tbl(db, "tags") %>% 
+  collect() %>% # this pulls the whole table
+  mutate(DateTagged = as.Date(DateTagged)) # this gets the dates and times in the correct format
+
+# just white sturgeon:
+wst = tbl(db, "tags") %>% 
+  filter(Sp == "wst") %>% 
+  collect() 
+
+# detections for just the white sturgeon tagged in 2012:
+wst2012 <- tbl(db, "tags") %>% # first get their TagID info
+  inner_join(tbl(db, "detections"), by = "TagID") %>% # join it with the detections table
+  filter(TagGroup == "wst_2012") %>% # filter down to just the 2012 white sturgeon
+  collect() # bring it into R as a data frame
+```
+
+
