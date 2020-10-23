@@ -1,6 +1,6 @@
 # Create and append ybt sqlite database
 # M. Johnston
-# Wed Sep  2 13:02:28 2020 ------------------------------
+# Tue Oct 20 10:31:10 2020 ------------------------------
 
 library(ybt)
 library(RSQLite) 
@@ -9,8 +9,8 @@ source("R/utils.R")
 # database filepath
 db_fp = "~/DropboxCFS/NewPROJECTS/AECCA-2018-YoloTelemetry/DELIVERABLES/Database/ybt_database.sqlite" 
 
-# initialize database
-ybt::db_init(db_fp)
+# initialize database - uncomment after deleting old db if rebuilding from scratch
+#ybt::db_init(db_fp)
 
 # test schema
 con = dbConnect(RSQLite::SQLite(), db_fp)
@@ -56,6 +56,12 @@ ybt_db_append(dd,
 
 # deployments table filepath
 deps_fp = "~/DropboxCFS/NewPROJECTS/AECCA-2018-YoloTelemetry/WORKING/YB_SQL_BaseTables/Deployments.csv"
+
+# In case you have to delete and replace the table entries without borking the schema:
+# con = dbConnect(RSQLite::SQLite(), db_fp)
+# deps = dbGetQuery(con, "SELECT * FROM deployments")
+# depsdbSendQuery(con, "DELETE FROM deployments")
+# dbDisconnect(con)
 
 ybt::write_deployments(deps_fp, db_fp)
 #-------------------------------------------------------#
