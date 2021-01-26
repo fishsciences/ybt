@@ -12,17 +12,20 @@ format_detections(
 )
 }
 \arguments{
-\item{dets_df}{Detections dataframe as it is returned by dbGetQuery("select * from detections").}
+\item{dets_df}{Detections dataframe as it is returned by dbGetQuery("select * from detections") in the Yolo Telemetry Project .sqlite database.}
 
-\item{tagid_col}{Quoted name of the column with Tag or Fish IDs in it (defaults to "TagID"); passed along to parse_tagid_col().}
+\item{tagid_col}{Quoted name of the column with Tag or Fish IDs in it (defaults to "TagID"); this is passed to parse_tagid_col().}
 
-\item{rec_col}{Quoted name of the column with the Receiver ID in it (defaults to "Receiver"); passed along to parse_receiver_col().}
+\item{rec_col}{Quoted name of the column with the Receiver ID in it (defaults to "Receiver"); this is passed to parse_receiver_col().}
 
 \item{datetime_col}{Quoted name of the column with detection date time stamps; defaults to "DateTimeUTC".}
 }
 \value{
-A dataframe with 10 formatted columns.
+A dataframe
 }
 \description{
-This function parses the TagID and Receiver columns from the detections table of the database, creates a DateTimePST column, and formats all date columns to "%Y-%m-%d %H:%M:%S".
+This function parses the TagID and Receiver columns from the detections table of the database, formats the UTC timestamp column to "%Y-%m-%d %H:%M:%S", and creates a DateTimePST column with a Pacific/Pitcairn time zone (PST).
+}
+\author{
+Myfanwy Johnston
 }

@@ -1,6 +1,8 @@
 #' Get cdec data for a given detection year
 #'
 #' Will pull data for the detection window of a given Detection year; that is, will pull CDEC data for the time that tagged fish are detected in the array.
+#' 
+#' NOTE: This function assumes you want date/time column returned from CDEC in **Pacific Standard Time**
 #'
 #' @param detyear Detection year for which you want data
 #' @param detsdf Detections dataframe
@@ -14,12 +16,10 @@
 #'
 get_detyear_cdec <- function(detyear, detsdf, timecol, cdecstn, sensor, durtype) {
 
-#function testing
- # detsdf = ybs; timecol = "DateTimePST"
+
   dets_df <- get_det_year(detsdf, timecol = timecol)
   start_end_lu <- get_det_window(dets_df, timecol = timecol)
-# function testing
-  #detyear = 2013; cdec_stn = "LIS"; sensor = 20; durtype = "E"
+
   data = cdec_query(station = cdecstn,
                     sensor_num = sensor,
                     dur_code = durtype,

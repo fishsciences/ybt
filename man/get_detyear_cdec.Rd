@@ -26,5 +26,7 @@ a dataframe returned by \code{cdeq_query()} for the specified detection year
 Will pull data for the detection window of a given Detection year; that is, will pull CDEC data for the time that tagged fish are detected in the array.
 }
 \details{
+NOTE: This function assumes you want date/time column returned from CDEC in **Pacific Standard Time**
+
 Note that this function calls get_det_year() and get_det_window internally, so you don't need to call these first.
 }
