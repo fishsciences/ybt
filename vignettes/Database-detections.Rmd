@@ -10,15 +10,17 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
+  eval = FALSE,
+  echo = TRUE,
   comment = "#>"
 )
 ```
 
-This is a subtopic of the `Data and Database` workflow.  It covers all handling of the detection data, from the files downloaded in the field to appending the database.
+This is a subtopic of the `Database` workflow.  It covers all handling of the detection data, from the files downloaded in the field to appending the database.
 
 ## General detections workflow
 
-  1. Download Receivers in the field
+  1. Download acoustic receivers in the field
   2. Copy all vrls from a given field download range into a new subfolder of `YB_Vemco/` using the `ybt::copy_vrls()` function.
   3. Create a new .vdb in that subfolder, following the naming conventions below.
   4. Process data in VUE, including drift-correction and exporting to .csv
@@ -75,20 +77,7 @@ YB_Vemco
 
 ```
 
-## 3. Create a new .vdb in that subfolder, following the naming conventions below.
-
- - Once all downloads are complete, create a subfolder within the parent folder titled with the range of download dates covered and a "_dc" suffix, if it has not already been done.  Example:
- 
-```{r, echo=TRUE, eval=FALSE}
-YB_Vemco
- |-- YBDetections_2020_0901-2021_0523_vrls
-        |-- YBDetections_2020_0901-2021_0523_dc
- |-- YBFieldDownloads
-```
-
-## 4. Process data in VUE, including drift-correction and exporting to .csv
-
-#### Set up the correct directory structure
+## 3. Create a new _dc.vdb in that subfolder, following the naming conventions below.
 
  - Create _dc.vdb (with correct naming convention; see below) and place within the corresponding download range's _dc subfolder (which was created in the previous step).  Example:
 
@@ -103,7 +92,7 @@ YB_Vemco
 
  - Edit VUE options to "copy .vrl files" into the correct _dc subfolder so that all edited .vrl files will end up in the _dc subfolder during import.
 
-### Drift-correct and export all detections for detection year
+## 4. Drift-correct and export all detections for detection year
    
  - Import raw field .vrls with the VRL editor tool and drift-correct upon import; accept the default appendix to filenames ("_edited.vrl").
  
@@ -123,9 +112,5 @@ YB_Vemco
 
 ## 6. Append the resulting detections dataframe to SQLite database
 
-This is done using the `ybt::ybt_db_append()` function.
+This is done using the `ybt::ybt_db_append()` function; see `vignettes('Database', package = 'ybt')`
 
-
-##   7. Back up updated database to cloud and/or external storage
-
-Currently the database is stored on Dropbox.

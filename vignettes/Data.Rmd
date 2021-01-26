@@ -23,7 +23,7 @@ This vignette covers the data and database workflows of the Yolo Bypass Telemetr
 
 There are four types of data associated with the YBT data and database workflows: tagging data, detection data, deployment data, and shed tag/migratory fate data.  All raw data for the database is contained in the `YB_SQL_BaseTables` subdirectory of the project folder on Dropbox. All templates for the data types are housed in the `DatabaseTemplates` subfolder of the `SOPs` subdirectory.
 
-The database is already set up with past years' data.  This means that in general, the ongoing data and database workflow is: 1) collect/digitize new data, and 2) append that data to the database with specialized functions in the `ybt` R package.
+The database is already set up with past years' data, current through fish tagged in fall of 2019.  This means that in general, the ongoing data and database workflow is: 1) collect/digitize new data, and 2) append that data to the database with specialized functions in the `ybt` R package.
 
 ## Things to remember for all data and files:
 
@@ -52,12 +52,11 @@ This role is very important, and thus recording the `DeploymentStart` date, in p
 
 ### Deployment  Data Workflow:
 
-1. Prior to going out to complete downloads, run the `ybt::make_deployments_fieldsheet()` function, supplying the `Stations` argument with the stations you plan to download.  This will create a .csv of the field datasheet template, which you can print, fill out in the field, and digitize upon return, saving the final digitized .csv with the field vrl naming conventions.
+1. Prior to going out to complete downloads, check the .csv template for the deployments to make sure you're collecting all the necessary info.  Digitize into the template upon return, saving the final digitized .csv with the field vrl naming conventions.
 
 2. In the field, follow the instructions in the Downloads SOP.
 
 3. After digitizing and double-checking your deployments .csv with your new deployment info, run the `write_deployments()` function with your .csv to append the new deployments to the database.
- 
  
 
 ### 2. Tags
@@ -87,47 +86,5 @@ The identification of shed tags is an ongoing process.  The `Sheds.xlsx` and `Re
 #### Shed and Recovered Tags Data Workflow:
 
 1. Update `Recoveries.xlsx` throughout the tagging season as recovery info comes in.
-
-
-# Database Workflow
-
-## Creating the database from scratch
-
-This can be done with the `create_ybt_database.R` script in the `inst/` directory of the `ybt` package.  It's not a very user-friendly process (kind of on purpose), so please let me know if you need to do it and I can walk you through the script the first time.
-
-
-## Querying the database
-
-If you already know `SQL`, you can easily deploy raw `SQL` queries of the database with the `RSQLite::dbGetQuery()` function.  If you're more comfortable with `dplyr`, you can also use it to construct and run database queries (please see [this tutorial](https://db.rstudio.com/dplyr/) for more information).  Some examples of common database queries are below, but all the queries you need for the Analysis workflow are pre-written into the scripts and reproducible report.
-
-```{r, eval=FALSE, echo=TRUE}
-# database connection: requires >= RSQLite 2.1.1
-library(dplyr)
-db = RSQLite::dbConnect(RSQLite::SQLite(), "../yb_database.sqlite") # check relative path
-
-# get general info about database
-dbListTables(db)
-tbls = dbListTables(db)
-# how many rows per table?
-sapply(tbls, function(x) dbGetQuery(db, paste("SELECT COUNT(*) FROM" , x)))
-# how many/what fields per table?
-sapply(tbls, dbListFields, conn = db)
-
-# All tagging metadata (including both wst and chinook)
-alltags = tbl(db, "tags") %>% 
-  collect() %>% # this pulls the whole table
-  mutate(DateTagged = as.Date(DateTagged)) # this gets the dates and times in the correct format
-
-# just white sturgeon:
-wst = tbl(db, "tags") %>% 
-  filter(Sp == "wst") %>% 
-  collect() 
-
-# detections for just the white sturgeon tagged in 2012:
-wst2012 <- tbl(db, "tags") %>% # first get their TagID info
-  inner_join(tbl(db, "detections"), by = "TagID") %>% # join it with the detections table
-  filter(TagGroup == "wst_2012") %>% # filter down to just the 2012 white sturgeon
-  collect() # bring it into R as a data frame
-```
 
 

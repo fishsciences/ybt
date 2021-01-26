@@ -18,8 +18,9 @@ Analysis is the third and final workflow of the Yolo Bypass Telemetry project.  
 
 ### General Analysis workflow
 
-1. Install the `ybt` package
-2. Knit the current year's version of the annual reproducible Telemetry Report.
+1. QAQC the data (there is an `inst/setup.R` script of the `ybt` package source files)
+2. Save the QAQC'd tables to individual .rds files, or however you like to access them
+3. Knit the current year's version of the annual reproducible Telemetry Report, using the QAQC'd data.
 
 
 ### 1. Install the `ybt` package
@@ -28,17 +29,19 @@ By running:
 ```{r, eval=FALSE}
 
 devtools::install_github("fishsciences/ybt", build_vignettes = TRUE)
+
 ```
 
 This will install all dependencies of the package as well.
 
 ### 2. Knit the Reproducible Report for the current year
 
-- First, download the `YBT_Reports` repository (currently hosted on Google Drive).  Open with Rstudio.
+- First, download the [`YBT_Reports` repository](https://github.com/fishsciences/YBT_Reports).  Open with Rstudio.
 
 - Save a new copy of `Reports/AnnualTelemetrySummary.Rmd` - I suggest saving it to a new directory created to hold all of the reports (example filename convention: ATS_YYYY.Rmd)
 
-- Parameterize the report.  Things that need to be altered are commented. These include:
+- Customize the setup for the report.  Things that need to be altered are commented. These include:
+   -  setting the correct file paths for your QAQC'd data
    - `focus_yr` (i.e. 2018)
    - `focus_tg` This is the name of the tag group as it appears in the `tags` table of the database.  Naming convention is the species abbreviation (fca for fall Chinook adult) + underscore + the calendar year in which they were all tagged, i.e. `wst_2012` or `fca_2017`.
    - relative file paths to the database and the detections, for false detection screening data.
@@ -47,4 +50,8 @@ This will install all dependencies of the package as well.
 
 ### Things to remember about the analysis workflow
 
- - Don't take the reproducible report at face value - always read through it carefully to make sure it passes basic sanity checks.  There may be unpredictable inconsistencies in each year's data that the report doesn't know how to handle automatically.
+ - Don't take the reproducible report at face value - always read through it carefully to make sure it passes basic sanity checks.  There may be unpredictable inconsistencies in each year's data that the report doesn't know how to handle automatically - make sure you include fixes for those in the individual year's .Rmd, not the template.
+ 
+ - The template will need to be updated every so often; it's very basic and there's plenty of room for improvement.  A good way to learn is to start by customizing the appearance!  Eventually we could get it to a fully parameterized R Markdown Report :)
+ 
+ 
