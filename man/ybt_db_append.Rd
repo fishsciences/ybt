@@ -7,16 +7,18 @@
 ybt_db_append(new_df, db_table, db_path, driver = SQLite())
 }
 \arguments{
-\item{new_df}{}
+\item{new_df}{data.frame containing the new observations to append
+to the database}
 
-\item{db_table}{}
+\item{db_table}{character, the name of the database table to
+append into}
 
-\item{db_path}{}
+\item{db_path}{character, the file path to the database}
 
-\item{driver}{}
+\item{driver}{the SQLite driver to use}
 }
 \value{
-
+NULL. This function is called for its side effects.
 }
 \description{
 Appends new data to an existing database.

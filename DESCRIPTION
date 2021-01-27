@@ -7,11 +7,13 @@ Maintainer: Myfanwy Johnston <myfanwy.johnston@fishsciences.net>
 Description: This package includes the functions needed to run scripts in the Analysis Workflow of the Yolo Bypass Telemetry project.
 License: GPL (>=3)
 Depends: lubridate,
-            RSQLite
+            RSQLite,
+			readxl
 Imports: 
     ggplot2,
     CDECRetrieve (>= 0.1.5),
-    data.table
+    data.table,
+	DBI
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1

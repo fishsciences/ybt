@@ -4,13 +4,15 @@
 
 ##' Appends new data to an existing database.
 ##' 
-##' Appends new data to an existing database. 
+##' Appends new data to an existing database.
 ##' @title YBT Append Detection Observations
-##' @param new_df 
-##' @param db_table 
-##' @param db_path 
-##' @param driver 
-##' @return 
+##' @param new_df data.frame containing the new observations to append
+##'     to the database
+##' @param db_table character, the name of the database table to
+##'     append into
+##' @param db_path character, the file path to the database
+##' @param driver the SQLite driver to use
+##' @return NULL. This function is called for its side effects.
 ##' @author Matt Espe
 ##' @export
 ybt_db_append = function(new_df, db_table, db_path, driver = SQLite())
