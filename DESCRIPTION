@@ -2,9 +2,7 @@ Package: ybt
 Type: Package
 Title: Yolo Bypass Telemetry Project Analysis Package
 Version: 0.0.1
-Authors@R: person(given = "Myfanwy", family = "Johnston",
-    role = c("aut", "cre"),
-    email = "myfanwy.johnston@fishsciences.net")
+Author: Myfanwy Johnston <myfanwy.johnston@fishsciences.net>
 Maintainer: Myfanwy Johnston <myfanwy.johnston@fishsciences.net>
 Description: This package includes the functions needed to run scripts in the Analysis Workflow of the Yolo Bypass Telemetry project.
 License: GPL (>=3)
@@ -13,8 +11,7 @@ Depends: lubridate,
 Imports: 
     ggplot2,
     CDECRetrieve (>= 0.1.5),
-    data.table,
-    readxl
+    data.table
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
