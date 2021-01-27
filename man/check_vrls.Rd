@@ -20,6 +20,8 @@ check_vrls(
 
 \item{db_filepath}{the full file path to the database}
 
+\item{date_range}{a vector of two quoted dates in "YYYY-MM-DD" format}
+
 \item{con}{a connection to a SQL database}
 
 \item{vrl_files}{a character vector of the VRL files to check

@@ -4,7 +4,7 @@
 \alias{bard_tags}
 \title{format TagIDs for BARD query}
 \usage{
-bard_tags(tagids, df = alltags, tagVar = "TagID", codeVar = "CodeSpace")
+bard_tags(tagids, df, tagVar = "TagID", codeVar = "CodeSpace")
 }
 \arguments{
 \item{tagids}{a vector of numeric TagIDs}
@@ -23,8 +23,4 @@ format TagIDs for BARD query
 }
 \details{
 This function assumes your tags are operating on the 69khz frequency.
-}
-\examples{
-bard_tags(tagids = c(2841, 2842))
-
 }

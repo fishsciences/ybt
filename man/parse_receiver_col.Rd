@@ -9,7 +9,7 @@ parse_receiver_col(df, reccol = "Receiver")
 \arguments{
 \item{df}{dataframe with a `Receiver` column that is formatted as 'VRX-ReceiverSN' (i.e.,  must be delimited by hyphens)}
 
-\item{tagcol}{the name of the column you wish to parse}
+\item{reccol}{the name of the receiver column you wish to parse; defaults to "Receiver"}
 }
 \value{
 A dataframe with the `Receiver` column at the end, with the `VRX` info and hyphen removed.
@@ -25,4 +25,7 @@ df <- structure(list(TagID = c("A69-1206-112", "A69-1206-152", "A69-1206-1908"
 ), Monitor = c("VR2W-106683", "VR2W-106683", "VR2W-106683"),
     Detections = c(1L, 1L, 1L)), row.names = c(NA, 3L), class = "data.frame")
 parse_receiver_col(df, "Monitor")
+}
+\author{
+Myfanwy Johnston
 }

@@ -28,6 +28,7 @@ grab_serial_date = function(x)
 ##' @title Check VRL files
 ##' @param vrl_file_dir the parent directory for the VRL files
 ##' @param db_filepath the full file path to the database
+##' @param date_range a vector of two quoted dates in "YYYY-MM-DD" format
 ##' @param con a connection to a SQL database
 ##' @param vrl_files a character vector of the VRL files to check
 ##'     against

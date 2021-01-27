@@ -8,7 +8,7 @@
 ##' @param dets_df detections data frame that is the result of the tag_tales function, with a ReleaseTime column, an arrival column, and a departure column
 ##' @param TagID_col name of the tagid column
 ##' @return A data frame of TagIDs and residence times
-##' @details this function is designed to work on one detection year at at ime
+##' @details this function is designed to work on one detection year at at time
 ##' @export
 
 

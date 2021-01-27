@@ -1,8 +1,9 @@
 #' Parse default-formatted Vemco Receiver column into two separate columns
 #'@description separates the default Vemco column formatting of VR2W-RecSN, then just keeps the ReceiverSN as a new column
 #'@param df dataframe with a `Receiver` column that is formatted as 'VRX-ReceiverSN' (i.e.,  must be delimited by hyphens)
-#'@param tagcol the name of the column you wish to parse
+#'@param reccol the name of the receiver column you wish to parse; defaults to "Receiver"
 #'@return A dataframe with the `Receiver` column at the end, with the `VRX` info and hyphen removed.
+#'@author Myfanwy Johnston
 #'@details This function will not work on a column delimited by more than one hyphen
 #'@export
 #'@examples

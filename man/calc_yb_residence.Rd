@@ -22,5 +22,5 @@ Assumes: you have a detections dataframe for a single detection year that has th
 
 - arrival and departure columns, like those resulting from the tag_tales() function.
 
-this function is designed to work on one detection year at at ime
+this function is designed to work on one detection year at at time
 }

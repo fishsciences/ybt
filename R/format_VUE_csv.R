@@ -55,8 +55,6 @@ dd[ , c("TagName", "TagSN","SensorValue", "SensorUnit")] = lapply(dd[ , c("TagNa
 #' @return A dataframe
 #' @author Myfanwy Johnston
 #' @export
-#' @examples 
-
 
 format_detections <- function(dets_df, tagid_col = "TagID", 
                               rec_col = "Receiver",
